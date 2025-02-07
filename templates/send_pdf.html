@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar PDF</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+    <style>
+        body {
+        background: linear-gradient(45deg, #8b1d24, #333);
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+    }
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+        .menu-toggle:hover {
+            background: none;
+            transform: none;
+        }
+        .offcanvas {
+            width: 150px;
+            background-color: #8b1d24;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+        .offcanvas.show {
+            background-color: #8b1d24;
+        }
+        .offcanvas-header .btn-close {
+            filter: invert(1);
+        }
+        .offcanvas-body a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            color: #8b1d24;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            margin-bottom: 20px !important;
+        }
+        .offcanvas-body a:last-child {
+            margin-bottom: 0;
+        }
+        .offcanvas-body a:hover {
+            background: #b71c1c;
+            color: white;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: 50px auto;
+            color: black;
+        }
+        .form-control {
+            border: 2px solid #8b1d24;
+            border-radius: 5px;
+        }
+        .form-control:focus {
+            box-shadow: 0px 0px 8px rgba(139, 29, 36, 0.8);
+            border-color: #b71c1c;
+        }
+        .btn-primary {
+            background-color: #8b1d24;
+            border: none;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+        .btn-primary:hover {
+            background-color: #b71c1c;
+        }
+        .logo {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">☰ Menu</div>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-unstyled">
+                <li><a href="http://127.0.0.1:5000/login" class="btn btn-light w-100 mb-2">Inicio</a></li>
+                <li><a href="http://127.0.0.1:5000/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
+                <li><a href="{{ url_for('novo_usuario') }}" class="btn btn-light w-100">Cadastrar</a></li>
+                <li><a href="http://127.0.0.1:5000/visual" class="btn btn-light w-100 mb-2">Arquivos Enviados</a></li>
+                <li><a href="http://127.0.0.1:5000/usuarios" class="btn btn-light w-100 mb-2">Usuarios</a></li>
+                <li><a href="{{ url_for('send_pdf_to_user') }}" class="btn btn-light w-100">Envio de PDF</a></li>
+                <li><a href="http://127.0.0.1:5000/master_dashboard" class="btn btn-light w-100">Dashboard</a></li>
+                <li><a href="http://127.0.0.1:5000/info" class="btn btn-light w-100">Informações</a></li>
+                <li><a href="http://127.0.0.1:5000/" class="btn btn-light w-100">Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("form").on("submit", function(event) {
+                event.preventDefault();  // Evita o envio normal do formulário
+                var formData = new FormData(this);
+    
+                $.ajax({
+                    type: $(this).attr("method"),
+                    url: $(this).attr("action"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $("#successModal").modal("show"); // Exibe o pop-up
+                    },
+                    error: function() {
+                        alert("Erro ao enviar o arquivo. Tente novamente.");
+                    }
+                });
+            });
+        });
+        
+    </script>
+    <div class="text-end p-3">
+        <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo">
+    </div>
+    <div class="container">
+        <h1 class="text-center">Enviar PDF para Usuário</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="user_id" class="form-label">Escolha o Usuário:</label>
+                <select name="user_id" id="user_id" class="form-control" required>
+                    <option value="">Selecione um usuário</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.name }} ({{ user.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="file" class="form-label">Selecione o arquivo PDF:</label>
+                <input type="file" name="file" id="file" accept=".pdf" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="file_type" class="form-label">Tipo de Arquivo:</label>
+                <select name="file_type" id="file_type" class="form-control" required>
+                    <option value="">Selecione o tipo de arquivo</option>
+                    <option value="adiantamento">Solicitação de Adiantamento</option>
+                    <option value="comissao">Solicitação de Comissão</option>
+                    <option value="premio">Solicitação de Premiação</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Enviar PDF</button>
+        </form>
+    </div>
+
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 10px;">
+                <div class="modal-header" style="background: #8b1d24; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                    <h5 class="modal-title" id="successModalLabel">Sucesso!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>O arquivo foi enviado com sucesso!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f7;
+            color: #333;
+            margin-left: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #c53030;
+            padding: 20px 0;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 2.4rem;
+            font-weight: 600;
+        }
+
+        .hamburger {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            background: none;
+            border: none;
+        }
+
+        nav {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #c53030;
+    color: white;
+    transition: left 0.3s ease;
+    padding-top: 100px; /* Ajuste o valor para descer o menu mais */
+    z-index: 90;
+}
+
+        nav.open {
+            left: 0;
+        }
+
+        nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 16px 24px; /* Aumentei o padding superior para descer mais os itens */
+    margin: 10px 0;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+        nav a:hover {
+            background-color: #9b2c2c;
+            border-radius: 8px;
+        }
+
+        .container {
+            margin-left: 270px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        h4 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #c53030;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+
+        table {
+            border-radius: 12px;
+            background-color: #c53030;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: none;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        th {
+            background-color: #c53030;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f8f9fc;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        tbody tr:hover {
+            background-color: #e2e8f0;
+            cursor: pointer;
+        }
+
+        .btn-custom {
+            background-color: #c53030;
+            color: white;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: bold;
+            border: none;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #9b2c2c;
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            border-radius: 10px;
+            color: white;
+            padding: 12px 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <nav id="side-menu">
+        <a href="/">Início</a>
+        <a href="/perfil">Meu Perfil</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/info">Informações</a>
+        <a href="/logout">Sair</a>
+    </nav>
+
+    <header>
+        <h1>Painel de Controle</h1>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </header>
+
+    <div class="container">
+        <h2>Bem-vindo ao Painel, {{ user.name }}</h2>
+
+        <!-- Arquivos Enviados Pelo Administrador -->
+        <div class="card">
+            <div class="card-header">
+                Arquivos Enviados Pelo Administrador
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome do Arquivo</th>
+                        <th scope="col">Tipo de Nota Fiscal</th>
+                        <th scope="col">Visualização</th>
+                        <th scope="col">Enviado Por</th>
+                        <th scope="col">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pdf in master_files %}
+                    <tr>
+                        <td>{{ pdf.filename }}</td>
+                        <td>{{ pdf.file_type|capitalize }}</td>
+                        <td>
+                            {% if pdf.first_viewed_at %}
+                                {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
+                            {% else %}
+                                Não visualizado
+                            {% endif %}
+                        </td>
+                        <td>Administrador</td>
+                        <td>
+                            <a href="{{ url_for('visualizar_pdf', file_id=pdf.id) }}" target="_blank">
+                                Visualizar PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhum arquivo disponível.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Arquivos Enviados Por Você -->
+        <div class="card">
+            <div class="card-header">
+                Arquivos Enviados Por Você
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome do Arquivo</th>
+                        <th scope="col">Tipo de Nota Fiscal</th>
+                        <th scope="col">Visualização</th>
+                        <th scope="col">Enviado Por</th>
+                        <th scope="col">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pdf in pdf_files %}
+                    <tr>
+                        <td>{{ pdf.filename }}</td>
+                        <td>{{ pdf.file_type|capitalize }}</td>
+                        <td>
+                            {% if pdf.first_viewed_at %}
+                                {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
+                            {% else %}
+                                Não visualizado
+                            {% endif %}
+                        </td>
+                        <td>Você</td>
+                        <td>
+                            <a href="{{ url_for('visualizar_pdf', file_id=pdf.id) }}" target="_blank">
+                                Visualizar PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhum arquivo disponível.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Formulário de Upload -->
+        <div class="mt-4">
+            <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="file_type" class="form-label"><h4>Tipo de Nota Fiscal:</h4></label>
+                    <select class="form-control" id="file_type" name="file_type" required>
+                        <option value="adiantamento">Adiantamento</option>
+                        <option value="comissao">Comissão</option>
+                        <option value="premio">Prêmio</option>
+                    </select>
+                </div>
+                <h4>Enviar Novo Arquivo PDF</h4>
+                <div class="mb-3">
+                    <label for="file" class="form-label">Selecione um arquivo PDF:</label>
+                    <input type="file" class="form-control" id="file" name="file" required>
+                </div>
+                <button type="submit" class="btn btn-custom">Enviar</button>
+            </form>
+        </div>
+
+        <!-- Botão de Logout -->
+        <div class="mt-4">
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Sair</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            menu.classList.toggle('open');
+        }
+
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('side-menu');
+            const hamburgerButton = document.querySelector('.hamburger');
+            if (!menu.contains(event.target) && !hamburgerButton.contains(event.target)) {
+                menu.classList.remove('open');
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

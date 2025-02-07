@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informativo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+    <style>
+
+        /* Botão do menu */
+.menu-toggle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+}
+
+.menu-toggle:hover {
+    background: none;
+    transform: none;
+}
+
+/* Estilização do menu lateral */
+.offcanvas {
+    width: 150px;
+    background-color: #8b1d24;
+    color: white;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Quando o menu estiver aberto, manter a cor vermelha no fundo */
+.offcanvas.show {
+    background-color: #8b1d24;
+}
+
+/* Botão de fechar o menu */
+.offcanvas-header .btn-close {
+    filter: invert(1);
+}
+
+/* Estilização dos botões do menu */
+.offcanvas-body a {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: white;
+    color: #8b1d24;
+    font-weight: bold;
+    border-radius: 15px;
+    transition: 0.3s;
+    text-decoration: none;
+    margin-bottom: 20px !important;
+}
+
+.offcanvas-body a:last-child {
+    margin-bottom: 0;
+}
+
+.offcanvas-body a:hover {
+    background: #b71c1c;
+    color: white;
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #8b1d24, #333);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #8b1d24;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .hamburger {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            background: none;
+            border: none;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #8b1d24;
+            transition: left 0.3s ease-in-out;
+            padding-top: 60px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        nav.open {
+            left: 0;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            background-color: #b71c1c;
+            border-radius: 5px;
+        }
+
+        .content {
+            margin: 20px auto;
+            padding: 30px;
+            max-width: 900px;
+            background-color: white;
+            color: black;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .content:hover {
+            transform: scale(1.00);
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .important {
+            color: #b71c1c;
+            font-weight: bold;
+        }
+
+        input[type="search"] {
+            border: 2px solid #8b1d24;
+            border-radius: 8px;
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="search"]:focus {
+            border-color: #b71c1c;
+            box-shadow: 0 0 8px rgba(183, 28, 28, 0.5);
+        }
+
+        .logo {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+
+
+  <!-- Botão de abertura do menu -->
+<div class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">☰ Menu</div>
+
+<!-- Menu lateral -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title"></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="list-unstyled">
+            <li><a href="http://127.0.0.1:5000/login" class="btn btn-light w-100 mb-2">Inicio</a></li>
+            <li><a href="http://127.0.0.1:5000/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
+            <li><a href="http://127.0.0.1:5000/dashboard" class="btn btn-light w-100 mb-2">Dashboard</a></li>
+            <li><a href="http://127.0.0.1:5000/info" class="btn btn-light w-100">Informações</a></li>
+            <li><a href="http://127.0.0.1:5000/" class="btn btn-light w-100">Sair</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="text-end p-3">
+    <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo">
+</div>
+
+
+    <div class="content">
+        <h2>Quadro Informativo:</h2>
+        <ul>
+            <li>As notas devem ser enviadas até <span class="important">10/03 às 18:00</span>. Notas enviadas posteriormente serão programadas para o próximo mês.</li>
+            <li>Notas enviadas no formato errado não serão consideradas, favor se atentar ao envio.</li>
+            <li>O pagamento será feito entre <span class="important">20/03 e 25/03</span>.</li>
+            <li>Emitir uma nota por empreendimento, não por unidade.</li>
+            <li>Em caso de erro na emissao da nota o pagamento poderera ser prorrogado</li>
+            <li>Preencher o corpo das notas com os dados bancários da sua conta PJ.</li>
+            <li>Notas enviadas por e-mail e WhatsApp nao serao validadas.</li>
+            <li>Aceitaremos somente notas encaminhadas atraves desta pagina</li>
+        </ul>
+<p></p>
+<p></p>
+
+        <h5>Contatos:</h5>
+        <p><strong>E-mails:</strong> <a href="mailto:bruno.alves@sousaaraujo.com.br">bruno.alves@sousaaraujo.com.br</a> | <a href="mailto:rafael.calderaro@sousaaraujo.com.br">rafael.calderaro@sousaaraujo.com.br</a></p>
+        <h2>Consulte o CNPJ do empreendimento:</h2>
+        <div class="table-container">
+            <input type="search" id="search" class="form-control" placeholder="Pesquisar Empreendimento...">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>CNPJ</th>
+                        <th>Nome do Empreendimento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AMETISTA</td>
+                        <td>36.366.418/0001-64</td>
+                    </tr>
+                    <tr>
+                        <td>GRAN PORTINARI</td>
+                        <td>42.810.302/0001-75</td>
+                    </tr>
+                    <tr>
+                        <td>MONET</td>
+                        <td>43.436.481/0001-95</td>
+                    </tr>
+                    <tr>
+                        <td>PORTAL DO LAGO</td>
+                        <td>23.532.828/0001-96</td>
+                    </tr>
+                    <tr>
+                        <td>RESIDENCIAL TURMALINA</td>
+                        <td>51.780.339/0001-99</td>
+                    </tr>
+                    <tr>
+                        <td>SAFIRA I</td>
+                        <td>22.620.409/0001-43</td>
+                    </tr>
+                    <tr>
+                        <td>SAFIRA II</td>
+                        <td>22.620.409/0001-43</td>
+                    </tr>
+                    <tr>
+                        <td>SIENA</td>
+                        <td>43.434.336/0001-75</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO HOME</td>
+                        <td>39.793.905/0001-00</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO JACAREI</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO LIFE</td>
+                        <td>39.793.905/0001-00</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO LIFE II</td>
+                        <td>39.793.905/0001-00</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO PAISAGE</td>
+                        <td>42.974.559/0001-62</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO PAISAGE II</td>
+                        <td>42.974.559/0001-62</td>
+                    </tr>
+                    <tr>
+                        <td>SOU PLENO VISAGE</td>
+                        <td>42.974.559/0001-62</td>
+                    </tr>
+                    <tr>
+                        <td>SOU SPECIAL MOMENT</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER NOVA ODESSA</td>
+                        <td>37.886.357/0001-29</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER POÁ</td>
+                        <td>32.225.532/0001-13</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER TAUBATE</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER TAUBATE II</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>TANGARÁ III</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>VICENZA</td>
+                        <td>43.827.950/0001-05</td>
+                    </tr>
+                    <tr>
+                        <td>VIDÁLIA</td>
+                        <td>29.080.196/0001-53</td>
+                    </tr>
+                    <tr>
+                        <td>CEREJEIRAS</td>
+                        <td>32.197.085/0001-36</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER JACAREÍ DAVI LINO</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER FLORENÇA</td>
+                        <td>43.827.950/0001-05</td>
+                    </tr>
+                    <tr>
+                        <td>CEREJEIRAS II</td>
+                        <td>32.197.085/0001-36</td>
+                    </tr>
+                    <tr>
+                        <td>SOU MAIS GUAIANASES</td>
+                        <td>42.043.862/0001-41</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER DIADEMA</td>
+                        <td>54.476.342/0001-01</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER VERONA</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>SOU VIVER RAVENNA</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+                    <tr>
+                        <td>SOU MAIS SUZANO</td>
+                        <td>54.457.770/0001-97</td>
+                    </tr>
+                    <tr>
+                        <td>SOU SPECIAL PLACE</td>
+                        <td>10.268.911/0001-58</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("search").addEventListener("keyup", function() {
+            let input = this.value.toLowerCase();
+            let rows = document.querySelectorAll("tbody tr");
+    
+            rows.forEach(row => {
+                let empreendimento = row.cells[0].textContent.toLowerCase();
+                let cnpj = row.cells[1].textContent.toLowerCase();
+    
+                if (empreendimento.includes(input) || cnpj.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+</body>
+</html>
