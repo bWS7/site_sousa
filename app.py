@@ -19,7 +19,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bruno_master:FYdi6BeYH3jRL0YOqt4XmInNwUOJlr0S@dpg-cul7u3jv2p9s73a4ru2g-a.oregon-postgres.render.com/test_4jyn'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ars291576@localhost/test'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
@@ -271,6 +271,9 @@ def master_dashboard():
         
         upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], file_type)
 
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)  # Cria a pasta caso não exista
+
         filename = file.filename
         filepath = os.path.join(upload_folder, filename)
         file.save(filepath)
@@ -282,25 +285,33 @@ def master_dashboard():
 
         return redirect(url_for('master_dashboard'))  # Redireciona de volta para o painel master
 
-    # Consulta todos os usuários com seus arquivos PDF associados
-    user_pdf_data = db.session.query(User, PDFFile).join(PDFFile).all()
+    # Consulta todos os usuários (exceto master) com seus arquivos PDF associados
+    user_pdf_data = (
+        db.session.query(User, PDFFile)
+        .join(PDFFile)
+        .filter(User.role != 'master')  # Exclui arquivos de usuários master
+        .all()
+    )
 
     # Organiza os dados para facilitar a renderização
-    user_pdf_data_processed = []
+    user_pdf_data_processed = {}
     for user, pdf_file in user_pdf_data:
-        user_pdf_data_processed.append({
-            'user': user,
-            'pdf_files': [{
-                'id': pdf_file.id,
-                'filename': pdf_file.filename,
-                'first_viewed_at': pdf_file.first_viewed_at,
-                'file_type': pdf_file.file_type,
-                'uploaded_at': pdf_file.uploaded_at
-            }]
+        if user.id not in user_pdf_data_processed:
+            user_pdf_data_processed[user.id] = {
+                'user': user,
+                'pdf_files': []
+            }
+        user_pdf_data_processed[user.id]['pdf_files'].append({
+            'id': pdf_file.id,
+            'filename': pdf_file.filename,
+            'first_viewed_at': pdf_file.first_viewed_at,
+            'file_type': pdf_file.file_type,
+            'uploaded_at': pdf_file.uploaded_at
         })
 
     # Retorna a página master_dashboard com os dados dos usuários e PDFs
-    return render_template('master_dashboard.html', user=user, user_pdf_data=user_pdf_data_processed)
+    return render_template('master_dashboard.html', user=user, user_pdf_data=list(user_pdf_data_processed.values()))
+
 
 @app.route('/info')
 def user_info():
