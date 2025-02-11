@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from datetime import datetime
 import pytz  # Para manipulação de fusos horários
 from config import Config
 from flask_migrate import Migrate
@@ -11,12 +10,11 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import LargeBinary
 from flask import send_file
 import io
-from pytz import timezone
 from flask import flash
 from PyPDF2 import PdfFileReader
 from io import BytesIO
-
-
+from pytz import timezone
+from datetime import datetime
 # Inicializa o Flask
 app = Flask(__name__)
 
@@ -26,7 +24,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'txt'}  # Adicione as extensões permitidas, se necessário
-
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "connect_args": {"options": "-c timezone=America/Sao_Paulo"}
+}
 
 # Inicializa o SQLAlchemy
 db = SQLAlchemy(app)
@@ -34,8 +34,9 @@ db = SQLAlchemy(app)
 # Inicializa o Migrate após a definição de app e db
 migrate = Migrate(app, db)
 
-# Define o fuso horário correto
-tz = pytz.timezone('America/Sao_Paulo')
+def get_sao_paulo_time():
+    tz = pytz.timezone('America/Sao_Paulo')
+    return datetime.now(tz)  # Removendo a conversão para UTC
 
 # Modelo do Usuário
 class User(db.Model):
@@ -79,12 +80,16 @@ def send_pdf_to_user():
             tz = pytz.timezone('America/Sao_Paulo')
             uploaded_at = datetime.now(tz)  # Define o horário ajustado
 
+            tz = pytz.timezone('America/Sao_Paulo')
+    # Cria um novo registro no banco com os dados binários
+
             # Cria um novo objeto PDFFile com os dados binários
             new_pdf = PDFFile(
                 filename=filename,
                 user_id=session['user_id'],
                 file_type='pdf',
-                file_data=file_data
+                file_data=file_data,
+                uploaded_at=get_sao_paulo_time()  # Define o horário de São Paulo na criação
             )
             db.session.add(new_pdf)
             db.session.commit()
@@ -139,6 +144,7 @@ def validar_senha():
         return jsonify(success=True)  # Senha está correta
     else:
         return jsonify(success=False)  # Senha está incorreta
+    
 
 # Modelo de Arquivo PDF
 class PDFFile(db.Model):
@@ -150,22 +156,20 @@ class PDFFile(db.Model):
     file_type = db.Column(db.String(50), nullable=False, default='pdf')
     first_viewed_at = db.Column(db.DateTime)
     file_data = db.Column(db.LargeBinary)  # Coluna para armazenar o conteúdo binário do arquivo PDF
-    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)  # Valor padrão de datetime.utcnow()
+    
+    uploaded_at = db.Column(db.DateTime(timezone=True), default=get_sao_paulo_time)
 
     # Relacionamento com o usuário
     user = db.relationship('User', back_populates='pdf_files')
 
-    def __init__(self, filename, user_id, file_type='pdf', file_data=None, first_viewed_at=None):
+    def __init__(self, filename, user_id, file_type='pdf', file_data=None, first_viewed_at=None, uploaded_at=None):
         self.filename = filename
         self.user_id = user_id
         self.file_type = file_type
-        self.file_data = file_data  # Agora armazena os dados binários do arquivo
+        self.file_data = file_data
         self.first_viewed_at = first_viewed_at
-        # Não precisa passar explicitamente 'uploaded_at' porque o valor padrão é gerado automaticamente
+        self.uploaded_at = uploaded_at
         
-        tz = pytz.timezone('America/Sao_Paulo')
-        self.uploaded_at = datetime.now(tz)  # Ajustando o horário para o fuso horário de São Paulo
-
     # Função para verificar se o usuário é um "master"
 def is_master(user_id):
     # Verifica o papel do usuário no banco de dados
@@ -374,12 +378,14 @@ def upload():
     tz = pytz.timezone('America/Sao_Paulo')
     uploaded_at = datetime.now(tz)  # Define o horário ajustado
 
+    tz = pytz.timezone('America/Sao_Paulo')
     # Cria um novo registro no banco com os dados binários
     new_file = PDFFile(
     filename=secure_filename(file.filename),  # Nome seguro do arquivo
     user_id=session['user_id'],  # ID do usuário a quem o arquivo pertence
     file_type=file_type,  # Tipo do arquivo
     file_data=file_data,  # Dados binários do arquivo
+    uploaded_at=uploaded_at
 )
 
     db.session.add(new_file)
@@ -467,6 +473,12 @@ def view_pdf(pdf_id):
     # Verifica se o arquivo existe e se os dados do PDF estão presentes
     if not pdf_file.file_data:
         return "Arquivo não encontrado ou corrompido", 404
+    
+    tz = pytz.timezone('America/Sao_Paulo')
+    uploaded_at = datetime.now(tz)  # Define o horário ajustado
+
+    tz = pytz.timezone('America/Sao_Paulo')
+    # Cria um novo registro no banco com os dados binários
 
     # Envia o arquivo PDF diretamente para o navegador, sem forçar o download
     return send_file(
