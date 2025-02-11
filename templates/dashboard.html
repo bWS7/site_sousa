@@ -6,7 +6,6 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
     <style>
         * {
@@ -15,155 +14,179 @@
             box-sizing: border-box;
         }
 
-        /* Botão do menu */
-.menu-toggle {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    border: none;
-    background: none;
-    font-size: 24px;
-    cursor: pointer;
+        .form-label h4 {
     color: white;
 }
 
-.menu-toggle:hover {
-    background: none;
-    transform: none;
-}
-
-/* Estilização do menu lateral */
-.offcanvas {
-    width: 150px;
-    background-color: #8b1d24;
-    color: white;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Quando o menu estiver aberto, manter a cor vermelha no fundo */
-.offcanvas.show {
-    background-color: #8b1d24;
-}
-
-/* Botão de fechar o menu */
-.offcanvas-header .btn-close {
-    filter: invert(1);
-}
-
-/* Estilização dos botões do menu */
-.offcanvas-body a {
-    display: block;
-    text-align: center;
-    padding: 10px;
-    background: white;
-    color: #8b1d24;
-    font-weight: bold;
-    border-radius: 15px;
-    transition: 0.3s;
-    text-decoration: none;
-    margin-bottom: 20px !important;
-}
-
-.offcanvas-body a:last-child {
-    margin-bottom: 0;
-}
-
-.offcanvas-body a:hover {
-    background: #b71c1c;
+.form-label {
     color: white;
 }
+
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f4f7;
-            color: #333;
-            margin-left: 0;
-            min-height: 100vh;
+            background: linear-gradient(45deg, #8b1d24, #333);
+            font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            margin: 0;
         }
 
         header {
-            background-color: #c53030;
-            padding: 20px 0;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 100;
+            text-align: center;
+            margin: 40px 0 20px 0;
+            width: 100%;
         }
 
         header h1 {
-            text-align: center;
-            font-size: 2.4rem;
-            font-weight: 600;
+            font-size: 2.5rem;
+            color: white;
         }
 
-        .hamburger {
+        /* Botão do menu */
+        .menu-toggle {
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 30px;
+            border: none;
+            background: none;
+            font-size: 24px;
             cursor: pointer;
             color: white;
+            z-index: 1000;
+        }
+
+        .menu-toggle:hover {
             background: none;
-            border: none;
+            transform: none;
         }
 
-        nav {
-    position: fixed;
-    top: 0;
-    left: -250px;
-    width: 250px;
-    height: 100%;
-    background-color: #c53030;
-    color: white;
-    transition: left 0.3s ease;
-    padding-top: 100px; /* Ajuste o valor para descer o menu mais */
-    z-index: 90;
-}
-
-        nav.open {
-            left: 0;
+        /* Estilização do menu lateral */
+        .offcanvas {
+            width: 250px;
+            background-color: #8b1d24;
+            color: white;
         }
 
-        nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 16px 24px; /* Aumentei o padding superior para descer mais os itens */
-    margin: 10px 0;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
-}
+        .offcanvas.show {
+            background-color: #8b1d24;
+        }
 
-        nav a:hover {
-            background-color: #9b2c2c;
-            border-radius: 8px;
+        .offcanvas-header .btn-close {
+            filter: invert(1);
+        }
+
+        .offcanvas-body a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            color: #8b1d24;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            margin-bottom: 20px !important;
+        }
+
+        .offcanvas-body a:hover {
+            background: #b71c1c;
+            color: white;
+        }
+
+        .logo {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            height: 150px;
         }
 
         .container {
-            margin-left: 270px;
-            margin-top: 30px;
             padding: 20px;
+            width: 100%;
+            flex-grow: 1; /* Garante que o conteúdo ocupe o espaço disponível */
         }
 
-        h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 20px;
+        .table td p {
+            margin: 0;
         }
 
-        h4 {
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #444;
+        .table th, .table td {
+            border-radius: 8px;
         }
+
+        /* Estilização da tabela */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: separate;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+    border: 1px solid #444;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+/* Cabeçalho da tabela */
+th {
+    background-color: #8b1d24 !important;
+    color: #fff;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    position: sticky; /* Fixa o cabeçalho ao rolar a tabela */
+    top: 0; /* Alinha o cabeçalho no topo */
+    z-index: 1; /* Garante que o cabeçalho fique acima das linhas */
+}
+
+/* Linhas da tabela */
+td {
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Efeito de hover nas linhas */
+tr:hover td {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px); /* Efeito de elevação mais suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Remove o efeito de hover no cabeçalho */
+tr:hover th {
+    transform: none; /* Garante que o cabeçalho não se mova */
+    box-shadow: none; /* Remove a sombra do cabeçalho */
+}
+
+/* Botões na tabela */
+.btn-primary {
+    background-color: #8b1d24;
+    border: none;
+    padding: 8px 20px;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #b71c1c;
+}
+
 
         .card {
-            background-color: #fff;
+            background: linear-gradient(45deg, #8b1d24, #333);
+            border: none;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             padding: 25px;
@@ -176,7 +199,7 @@
         }
 
         .card-header {
-            background-color: #c53030;
+            background-color: #8b1d24;
             color: white;
             font-weight: bold;
             font-size: 1.3rem;
@@ -185,44 +208,8 @@
             border-radius: 10px;
         }
 
-        table {
-            border-radius: 12px;
-            background-color: #c53030;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: none;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        th, td {
-            text-align: center;
-            vertical-align: middle;
-            padding: 15px;
-            font-size: 1.1rem;
-        }
-
-        th {
-            background-color: #c53030;
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        tbody tr:nth-child(odd) {
-            background-color: #f8f9fc;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        tbody tr:hover {
-            background-color: #e2e8f0;
-            cursor: pointer;
-        }
-
         .btn-custom {
-            background-color: #c53030;
+            background-color: #8b1d24;
             color: white;
             border-radius: 10px;
             padding: 12px 24px;
@@ -234,7 +221,7 @@
         }
 
         .btn-custom:hover {
-            background-color: #9b2c2c;
+            background-color: #b71c1c;
             transform: scale(1.05);
         }
 
@@ -251,10 +238,20 @@
         .btn-danger:hover {
             background-color: #d32f2f;
         }
+
+        html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Evitar rolagem horizontal */
+}
+
     </style>
 </head>
 <body>
     <div class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">☰ Menu</div>
+
+    <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo">
 
     <!-- Menu lateral -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
@@ -274,13 +271,10 @@
     </div>
 
     <header>
-        <h1>Painel de Controle</h1>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <h1>Dashboard {{ user.name }} </h1>
     </header>
 
     <div class="container">
-        <h2>Bem-vindo ao Painel, {{ user.name }}</h2>
-
         <!-- Arquivos Enviados Pelo Administrador -->
         <div class="card">
             <div class="card-header">
@@ -310,9 +304,13 @@
                         </td>
                         <td>Administrador</td>
                         <td>
-                            <a href="{{ url_for('visualizar_pdf', file_id=pdf.id) }}" target="_blank">
-                                Visualizar PDF
-                            </a>
+                            {% if data.pdf_files %}
+                            {% for pdf in data.pdf_files %}
+                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a>
+                            {% endfor %}
+                            {% else %}
+                            <p>Sem ações</p>
+                            {% endif %}
                         </td>
                     </tr>
                     {% else %}
@@ -378,7 +376,7 @@
                         <option value="premio">Prêmio</option>
                     </select>
                 </div>
-                <h4>Enviar Novo Arquivo PDF</h4>
+                <label for="file_type" class="form-label"><h4>Enviar novo arquivo PDF</h4></label>
                 <div class="mb-3">
                     <label for="file" class="form-label">Selecione um arquivo PDF:</label>
                     <input type="file" class="form-control" id="file" name="file" required>
@@ -414,7 +412,6 @@
         function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('open');
         }
-    
     </script>
 </body>
 </html>
