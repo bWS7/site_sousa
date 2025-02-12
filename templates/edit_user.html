@@ -176,6 +176,15 @@
                         <option value="corretor_autonomo" {% if user.user_type == 'corretor_autonomo' %}selected{% endif %}>Corretor Autônomo</option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label for="regiao">Regional:</label>
+                    <select id="regiao" name="regiao" class="form-control" required>
+                        <option value="RGS" {% if user.regiao == 'RGS' %}selected{% endif %}>RGS</option>
+                        <option value="RAT" {% if user.regiao == 'RAT' %}selected{% endif %}>RAT</option>
+                        <option value="RGC" {% if user.regiao == 'RGC' %}selected{% endif %}>RGC</option>
+                        <option value="RVP" {% if user.regiao == 'RVP' %}selected{% endif %}>RVP</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="password">Nova senha:</label>
                     <input type="password" id="password" name="password" value="{{ user.password }}" class="form-control">

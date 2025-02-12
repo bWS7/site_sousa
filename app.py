@@ -19,7 +19,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bruno_master:FYdi6BeYH3jRL0YOqt4XmInNwUOJlr0S@dpg-cul7u3jv2p9s73a4ru2g-a.oregon-postgres.render.com/test_4jyn'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ars291576@localhost/test'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
@@ -47,6 +47,8 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)  # Senha em texto simples
     role = db.Column(db.String(10), nullable=False, default='user')  # Tipo de usuário com valor padrão
     user_type = db.Column(db.String(20))  # Adiciona a coluna 'user_type'
+    regiao = db.Column(db.String(100))  # Novo campo
+    
 
     # Relacionamento com os arquivos PDF
     pdf_files = db.relationship('PDFFile', back_populates='user', lazy=True)
@@ -355,9 +357,10 @@ def cadastrar_usuario():
         password = request.form['password']
         role = request.form['role']
         user_type = request.form['user_type']
+        regiao = request.form['regiao']  # Obtendo o valor da região do formulário
 
         # Adiciona o novo usuário no banco de dados
-        new_user = User(cnpj=cnpj, name=name, email=email, password=(password), role=role, user_type=user_type)
+        new_user = User(cnpj=cnpj, name=name, email=email, password=(password), role=role, user_type=user_type,regiao=regiao)
         db.session.add(new_user)
         db.session.commit()
 
