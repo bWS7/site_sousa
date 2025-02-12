@@ -19,7 +19,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ars291576@localhost/test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bruno_master:FYdi6BeYH3jRL0YOqt4XmInNwUOJlr0S@dpg-cul7u3jv2p9s73a4ru2g-a.oregon-postgres.render.com/test_4jyn'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
