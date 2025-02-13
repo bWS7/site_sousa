@@ -8,41 +8,43 @@
     <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
     <style>
         body {
-    background: linear-gradient(45deg, #8b1d24, #333);
-    font-family: 'Poppins', sans-serif;
-    color: #fff;
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row; /* Alinha o logo e o card em linha */
-}
+            background: linear-gradient(45deg, #8b1d24, #333);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Muda para coluna em telas menores */
+            text-align: center;
+            padding: 20px;
+        }
 
-.logo {
-    max-width: 500px; /* Aumente o tamanho do logo */
-    margin-right: 430px; /* Ajuste o espaçamento entre o logo e o card */
-}
+        .logo {
+            max-width: 300px; /* Tamanho padrão para telas menores */
+            margin-bottom: 20px; /* Espaçamento entre logo e card */
+        }
 
-.card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    width: 100%;
-    max-width: 450px;
-    text-align: center;
-    transition: transform 0.3s ease;
-}
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
 
-.card-body p {
-    color: #fff;
-}
+        .card-body p {
+            color: #fff;
+        }
 
-.card:hover {
-    transform: translateY(-15px); /* Efeito de levantar o card */
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-}
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
 
         .card-header {
             background-color: #8b1d24;
@@ -67,10 +69,22 @@
             border-color: #b71c1c;
             transform: translateY(-3px);
         }
+
+        /* Responsividade */
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row; /* Em telas maiores, exibe em linha */
+                text-align: left;
+            }
+
+            .logo {
+                max-width: 500px;
+                margin-right: 50px;
+            }
+        }
     </style>
 </head>
 <body>
-
 
     <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo Construtora Sousa Araujo">
 

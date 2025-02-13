@@ -17,41 +17,41 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: row; /* Alterado para disposição em linha */
+            flex-direction: column; /* Mudança para coluna no mobile */
+            text-align: center;
+            padding: 20px;
         }
 
         .logo {
-    max-width: 500px; /* Aumente o tamanho do logo */
-    margin-right: 430px; /* Ajuste o espaçamento entre o logo e o card */
-}
+            max-width: 300px;
+            margin-bottom: 20px; /* Ajuste para evitar corte no mobile */
+        }
 
-.card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    width: 100%;
-    max-width: 450px;
-    text-align: center;
-    transition: transform 0.3s ease;
-}
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
 
         .form-label {
-    color: #fff;
-}
+            color: #fff;
+        }
 
-        
         .card:hover {
-            transform: translateY(-15px);
+            transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .card-header {
             background: #8b1d24;
             color: #fff;
-            text-align: center;
-            font-size: 2.2rem;
-            padding: 30px;
+            font-size: 2rem;
+            padding: 20px;
             border-radius: 20px 20px 0 0;
         }
 
@@ -59,7 +59,7 @@
             border-radius: 25px;
             border: 2px solid #8b1d24;
             padding: 15px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
@@ -84,12 +84,6 @@
             transform: translateY(-3px);
         }
 
-        .alert {
-            border-radius: 10px;
-            font-size: 1.2rem;
-            margin-top: 20px;
-        }
-
         .text-center a {
             color: #8b1d24;
             text-decoration: none;
@@ -100,39 +94,51 @@
         .text-center a:hover {
             color: #b71c1c;
         }
+
+        /* Responsividade */
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+                text-align: left;
+            }
+
+            .logo {
+                max-width: 500px;
+                margin-right: 50px;
+                margin-bottom: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container d-flex justify-content-center align-items-center mt-5">
-        <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo Construtora Sousa Araujo">
-        <div class="card">
-            <div class="card-header">
-                Login
-            </div>
-            <div class="card-body">
-                <form method="POST" action="/login">
-                    <div class="mb-3">
-                        <label for="cnpj" class="form-label">CNPJ</label>
-                        <input type="text" class="form-control" id="cnpj" name="cnpj" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Entrar</button>
-                </form>
+    <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo Construtora Sousa Araujo">
 
-                <!-- Pop-up de erro -->
-                {% if error %}
-                    <div class="alert alert-danger mt-3" role="alert">
-                        CNPJ ou senha incorretos.
-                    </div>
-                {% endif %}
-
-                <div class="text-center mt-3">
-                    <a href="/">Voltar para a página inicial</a>
+    <div class="card">
+        <div class="card-header">
+            Login
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/login">
+                <div class="mb-3">
+                    <label for="cnpj" class="form-label">CNPJ</label>
+                    <input type="text" class="form-control" id="cnpj" name="cnpj" required>
                 </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            </form>
+
+            {% if error %}
+                <div class="alert alert-danger mt-3" role="alert">
+                    CNPJ ou senha incorretos.
+                </div>
+            {% endif %}
+
+            <div class="text-center mt-3">
+                <a href="/">Voltar para a página inicial</a>
             </div>
         </div>
     </div>
