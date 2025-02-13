@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Superintendente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+    <style>
+        body {
+            background: linear-gradient(45deg, #8b1d24, #333);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            margin: 0;
+        }
+
+        header {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        table {
+            width: 80%; /* Mesma largura da barra de pesquisa e filtro */
+            margin: 20px auto;
+            border-collapse: separate;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #444;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        /* Cabeçalho da tabela */
+        th {
+            background-color: #8b1d24 !important;
+            color: #fff;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Linhas da tabela */
+        td {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        /* Efeito de hover nas linhas */
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: #8b1d24;
+            border: none;
+            padding: 8px 20px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #b71c1c;
+        }
+
+        .logo {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            height: 150px;
+        }
+
+        .container {
+            padding: 20px 0;
+            width: 100%;
+            margin: 0;
+        }
+
+        .table td p {
+            margin: 0;
+        }
+
+        .table th, .table td {
+            border-radius: 8px;
+        }
+
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+        }
+
+        .menu-toggle:hover {
+            background: none;
+            transform: none;
+        }
+
+        .offcanvas {
+            width: 250px;
+            background-color: #8b1d24;
+            color: white;
+        }
+
+        .offcanvas.show {
+            background-color: #8b1d24;
+        }
+
+        .offcanvas-header .btn-close {
+            filter: invert(1);
+        }
+
+        .offcanvas-body a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            color: #8b1d24;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            margin-bottom: 20px !important;
+        }
+
+        .form-label {
+            color: white;
+        }
+
+        .offcanvas-body a:hover {
+            background: #b71c1c;
+            color: white;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .search-filter-container {
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 60%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #8b1d24;
+            border-radius: 25px;
+            outline: none;
+            transition: 0.3s ease-in-out;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-dropdown {
+            width: 25%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #8b1d24;
+            border-radius: 25px;
+            background-color: white;
+            cursor: pointer;
+            outline: none;
+            transition: 0.3s ease-in-out;
+        }
+
+        .search-bar:focus {
+            border-color: #b71c1c;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-dropdown:hover {
+            border-color: #b71c1c;
+        }
+
+        .label-title {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Dashboard {{ user.name }} </h1>
+    </header>
+
+    <div class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">☰ Menu</div>
+
+    <!-- Menu lateral -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral" data-bs-backdrop="true">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Menu</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-unstyled">
+                <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
+                <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
+                <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100">Dashboard</a></li>
+                <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
+                <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-filter-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Pesquisar usuário..." onkeyup="searchTable()">
+            <select id="fileTypeFilter" class="filter-dropdown" onchange="filterTable()">
+                <option value="">Filtrar por Tipo de Arquivo</option>
+                <option value="premio">Premiação</option>
+                <option value="adiantamento">Adiantamento</option>
+                <option value="comissao">Comissão</option>
+            </select>
+        </div>
+
+        <label for="regiao" class="form-label label-title"><h4>Arquivos enviados na região {{ user.regiao }}:</h4></label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Nome do Arquivo</th>
+                    <th>Data de Envio</th>
+                    <th>Tipo de Arquivo</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pdf in pdf_files %}
+                <tr>
+                    <td>{{ pdf.user.name }}</td>
+                    <td>{{ pdf.filename }}</td>
+                    <td>{{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ pdf.file_type }}</td>
+                    <td><a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function searchTable() {
+            let input = document.getElementById('searchInput');
+            let filter = input.value.toUpperCase();
+            let table = document.querySelector('table');
+            let rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName('td');
+                let name = cells[0].textContent || cells[0].innerText;
+                if (name.toUpperCase().indexOf(filter) > -1) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        function filterTable() {
+            let filter = document.getElementById("fileTypeFilter").value;
+            let table = document.querySelector('table');
+            let rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName('td');
+                let fileType = cells[3].textContent || cells[3].innerText;
+                if (fileType.toLowerCase().indexOf(filter.toLowerCase()) > -1 || filter === "") {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

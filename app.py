@@ -211,13 +211,32 @@ def login():
             if user.role == 'master':
                 return redirect(url_for('master_dashboard'))
             elif user.role == 'admin':
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('admin_dashboard'))
             else:
                 return redirect(url_for('dashboard'))
         else:
             error = True  # Se as credenciais estiverem erradas, define o erro
 
     return render_template('login.html', error=error)
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+
+    if user.role != 'admin':
+        return redirect(url_for('dashboard'))  # Se não for admin, redireciona
+
+    # Buscar todos os usuários que pertencem à mesma região do admin
+    users_in_region = User.query.filter_by(regiao=user.regiao).all()
+    user_ids = [u.id for u in users_in_region]  # Lista de IDs de usuários da região
+
+    # Buscar os arquivos enviados por usuários dessa região
+    pdf_files = PDFFile.query.filter(PDFFile.user_id.in_(user_ids)).all()
+
+    return render_template('admin_dashboard.html', pdf_files=pdf_files, user=user)
 
 
 @app.route('/dashboard')
@@ -448,6 +467,7 @@ def edit_user(user_id):
         user.password = request.form['password']
         user.role = request.form['role']
         user.user_type = request.form['user_type']
+        user.regiao = request.form['regiao']
         
         db.session.commit()
         
