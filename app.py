@@ -19,7 +19,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bruno_master:FYdi6BeYH3jRL0YOqt4XmInNwUOJlr0S@dpg-cul7u3jv2p9s73a4ru2g-a.oregon-postgres.render.com/test_4jyn'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ars291576@localhost:5432/test'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
@@ -133,6 +133,11 @@ def perfil():
     
     return render_template('perfil.html', user=user)  # Exibe a página de perfil com as informações do usuário
 
+# Rota para exibir o formulário
+@app.route('/forms', methods=['GET'])
+def form():
+    return render_template('forms.html')
+
 
 # Rota de validação de senha para AJAX
 @app.route('/validar-senha', methods=['POST'])
@@ -158,19 +163,28 @@ class PDFFile(db.Model):
     file_type = db.Column(db.String(50), nullable=False, default='pdf')
     first_viewed_at = db.Column(db.DateTime)
     file_data = db.Column(db.LargeBinary)  # Coluna para armazenar o conteúdo binário do arquivo PDF
-    
+    empreendimento = db.Column(db.String(255))
+    bloco = db.Column(db.String(255))
+    unidade = db.Column(db.String(255))
+    number_nf = db.Column(db.String(255))
+    valor = db.Column(db.String(255))
     uploaded_at = db.Column(db.DateTime(timezone=True), default=get_sao_paulo_time)
 
     # Relacionamento com o usuário
     user = db.relationship('User', back_populates='pdf_files')
 
-    def __init__(self, filename, user_id, file_type='pdf', file_data=None, first_viewed_at=None, uploaded_at=None):
+    def __init__(self, filename, user_id, file_type='pdf', file_data=None, first_viewed_at=None, uploaded_at=None, empreendimento=None, bloco=None, unidade=None, number_nf=None, valor=None):
         self.filename = filename
         self.user_id = user_id
         self.file_type = file_type
         self.file_data = file_data
         self.first_viewed_at = first_viewed_at
         self.uploaded_at = uploaded_at
+        self.empreendimento = empreendimento
+        self.bloco = bloco
+        self.unidade = unidade
+        self.number_nf = number_nf
+        self.valor = valor
         
     # Função para verificar se o usuário é um "master"
 def is_master(user_id):
@@ -408,23 +422,35 @@ def upload():
     # Lê os dados binários do arquivo
     file_data = file.read()
     
+    # Recebe os dados do formulário para as novas colunas
+    empreendimento = request.form['empreendimento']
+    bloco = request.form['bloco']
+    unidade = request.form['unidade']
+    number_nf = request.form['number_nf']
+    valor = request.form['valor']
+
     tz = pytz.timezone('America/Sao_Paulo')
     uploaded_at = datetime.now(tz)  # Define o horário ajustado
 
-    tz = pytz.timezone('America/Sao_Paulo')
-    # Cria um novo registro no banco com os dados binários
+    # Cria um novo registro no banco com os dados binários e as novas colunas
     new_file = PDFFile(
-    filename=secure_filename(file.filename),  # Nome seguro do arquivo
-    user_id=session['user_id'],  # ID do usuário a quem o arquivo pertence
-    file_type=file_type,  # Tipo do arquivo
-    file_data=file_data,  # Dados binários do arquivo
-    uploaded_at=uploaded_at
-)
+        filename=secure_filename(file.filename),  # Nome seguro do arquivo
+        user_id=session['user_id'],  # ID do usuário a quem o arquivo pertence
+        file_type=file_type,  # Tipo do arquivo
+        file_data=file_data,  # Dados binários do arquivo
+        uploaded_at=uploaded_at,
+        empreendimento=empreendimento,  # Empreendimento
+        bloco=bloco,  # Bloco
+        unidade=unidade,  # Unidade
+        number_nf=number_nf,  # Número da nota fiscal
+        valor=valor  # Valor
+    )
 
     db.session.add(new_file)
     db.session.commit()
     
     return redirect(url_for('dashboard'))
+
 
 @app.route('/usuarios', methods=['GET'])
 def listar_usuarios():

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Formulario de Envio</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
@@ -18,8 +18,12 @@
     color: white;
 }
 
+.form-label h3 {
+    color: rgb(7, 7, 7);
+}
+
 .form-label {
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 
@@ -168,26 +172,19 @@ tr:hover th {
     box-shadow: none; /* Remove a sombra do cabeçalho */
 }
 
-/* Centraliza o botão */
+/* Botões na tabela */
 .btn-primary {
-    display: block;  /* Faz o botão ocupar toda a largura disponível */
-    margin: 20px auto; /* Centraliza horizontalmente */
-    background-color: #28a745; /* Verde chamativo */
+    background-color: #8b1d24;
     border: none;
-    padding: 12px 24px;
+    padding: 8px 20px;
     color: white;
-    border-radius: 8px;
+    border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 16px;
-    text-align: center;
-    transition: all 0.3s ease-in-out; /* Suaviza a transição */
 }
 
-/* Efeito de hover */
 .btn-primary:hover {
-    background-color: #218838; /* Verde um pouco mais escuro */
-    transform: scale(1.05); /* Aumenta ligeiramente ao passar o mouse */
+    background-color: #b71c1c;
 }
 
 
@@ -253,6 +250,31 @@ tr:hover th {
     overflow-x: hidden; /* Evitar rolagem horizontal */
 }
 
+/* Cartão */
+.card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    /* Inputs */
+    .form-control {
+        border-radius: 6px;
+        border: 2px solid #8b1d24;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 6px rgba(139, 29, 36, 0.5);
+        border-color: #8b1d24;
+        outline: none;
+    }
+
     </style>
 </head>
 <body>
@@ -278,108 +300,106 @@ tr:hover th {
     </div>
 
     <header>
-        <h1>Dashboard {{ user.name }} </h1>
+        <h1>Formulario de Envio</h1>
     </header>
-
-    <div class="container">
-        <!-- Arquivos Enviados Pelo Administrador -->
-        <div class="card">
-            <div class="card-header">
-                Arquivos Enviados Pelo Administrador
-            </div>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Nome do Arquivo</th>
-                        <th scope="col">Tipo de Nota Fiscal</th>
-                        <th scope="col">Visualização</th>
-                        <th scope="col">Enviado Por</th>
-                        <th scope="col">Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pdf in master_files %}
-                    <tr>
-                        <td>{{ pdf.filename }}</td>
-                        <td>{{ pdf.file_type|capitalize }}</td>
-                        <td>
-                            {% if pdf.first_viewed_at %}
-                                {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
-                            {% else %}
-                                Não visualizado
-                            {% endif %}
-                        </td>
-                        <td>Administrador</td>
-                        <td>
-                            {% if data.pdf_files %}
-                            {% for pdf in data.pdf_files %}
-                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a>
-                            {% endfor %}
-                            {% else %}
-                            <p>Sem ações</p>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="5" class="text-center">Nenhum arquivo disponível.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<div class="card w-50">
+    <!-- Formulário de Upload -->
+    <div class="mt-4">
+        <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="file_type" class="form-label">Tipo de Nota Fiscal:</label>
+                <select class="form-control" id="file_type" name="file_type" required>
+                    <option value="adiantamento">Adiantamento</option>
+                    <option value="comissao">Comissão</option>
+                    <option value="premio">Prêmio</option>
+                </select>
+    <div class="mb-3">
+        <label for="empreendimento" class="form-label">Selecione o empreendimento:</label>
+        <select class="form-control" id="empreendimento" name="empreendimento" required>
+            <option value="Selecionar">Selecionar:</option>
+            <option value="TANGARA I">TANGARA I</option>
+            <option value="AMETISTA">AMETISTA</option>
+            <option value="CEREJEIRAS">CEREJEIRAS</option>
+            <option value="CEREJEIRAS II">CEREJEIRAS II</option>
+            <option value="FLORENÇA">FLORENÇA</option>
+            <option value="GRAN PORTINARI">GRAN PORTINARI</option>
+            <option value="MONET">MONET</option>
+            <option value="PORTAL DO LAGO">PORTAL DO LAGO</option>
+            <option value="RESIDENCIAL TURMALINA">RESIDENCIAL TURMALINA</option>
+            <option value="SAFIRA I">SAFIRA I</option>
+            <option value="SAFIRA II">SAFIRA II</option>
+            <option value="SIENA">SIENA</option>
+            <option value="SOU MAIS GUAIANASES">SOU MAIS GUAIANASES</option>
+            <option value="SOU MAIS SUZANO">SOU MAIS SUZANO</option>
+            <option value="SOU PLENO HOME">SOU PLENO HOME</option>
+            <option value="SOU PLENO JACAREI">SOU PLENO JACAREI</option>
+            <option value="SOU PLENO LIFE">SOU PLENO LIFE</option>
+            <option value="SOU PLENO LIFE II">SOU PLENO LIFE II</option>
+            <option value="SOU PLENO PAISAGE - HORTOLANDIA">SOU PLENO PAISAGE - HORTOLANDIA</option>
+            <option value="SOU PLENO PAISAGE II">SOU PLENO PAISAGE II</option>
+            <option value="SOU PLENO VISAGE - HORTOLANDIA">SOU PLENO VISAGE - HORTOLANDIA</option>
+            <option value="SOU SPECIAL MOMENT">SOU SPECIAL MOMENT</option>
+            <option value="SOU SPECIAL PLACE">SOU SPECIAL PLACE</option>
+            <option value="SOU VIVER JACAREI (DAVI LINO)">SOU VIVER JACAREI (DAVI LINO)</option>
+            <option value="SOU VIVER NOVA ODESSA">SOU VIVER NOVA ODESSA</option>
+            <option value="SOU VIVER POA">SOU VIVER POA</option>
+            <option value="SOU VIVER RAVENNA">SOU VIVER RAVENNA</option>
+            <option value="SOU VIVER TAUBATE">SOU VIVER TAUBATE</option>
+            <option value="SOU VIVER TAUBATE II">SOU VIVER TAUBATE II</option>
+            <option value="SOU VIVER VERONA">SOU VIVER VERONA</option>
+            <option value="SOU VIVER VICENZA">SOU VIVER VICENZA</option>
+            <option value="TANGARA I">TANGARA I</option>
+            <option value="TANGARA II">TANGARA II</option>
+            <option value="TANGARA III">TANGARA III</option>
+            <option value="VIDALIA">VIDALIA</option>
+        </select>
+        <div class="mb-3">
+            <label for="bloco" class="form-label">Bloco</label>
+            <input type="text" id="bloco" name="bloco" class="form-control" required>
         </div>
-
-        <!-- Arquivos Enviados Por Você -->
-        <div class="card">
-            <div class="card-header">
-                Arquivos Enviados Por Você
-            </div>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Nome do Arquivo</th>
-                        <th scope="col">Tipo de Nota Fiscal</th>
-                        <th scope="col">Horário de Envio</th>
-                        <th scope="col">Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pdf in pdf_files %}
-                    <tr>
-                        <td>{{ pdf.filename }}</td>
-                        <td>{{ pdf.file_type|capitalize }}</td>
-                        <td>
-                            {% if pdf.uploaded_at %}
-                                {{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M:%S') }}
-                            {% else %}
-                                Não disponível
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ url_for('visualizar_pdf', file_id=pdf.id) }}" target="_blank">
-                                Visualizar PDF
-                            </a>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="5" class="text-center">Nenhum arquivo disponível.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            
+        <div class="mb-3">
+            <label for="unidade" class="form-label">Unidade</label>
+            <input type="text" id="unidade" name="unidade" class="form-control" required>
         </div>
+        <div class="mb-3">
+            <label for="number_nf" class="form-label">Numero da NF</label>
+            <input type="text" id="number_nf" name="number_nf" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="valor" class="form-label">Valor da NF</label>
+            <input type="text" id="valor" name="valor" class="form-control" required>
+        </div>
+            </div>
+            <label for="file_type" class="form-label"><h3>Enviar novo arquivo PDF</h3></label>
+            <div class="mb-3">
+                <label for="file" class="form-label">Selecione um arquivo PDF:</label>
+                <input type="file" class="form-control" id="file" name="file" required>
+            </div>
+            <button type="submit" class="btn btn-custom">Enviar</button>
+        </form>
+    </div>
 
-        <a href="http://127.0.0.1:5000/forms" class="btn btn-primary">Enviar Nota Fiscal</a>
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById('side-menu');
+        menu.classList.toggle('open');
+    }
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        function toggleMenu() {
-            document.getElementById('side-menu').classList.toggle('open');
+    document.addEventListener('click', function (event) {
+        const menu = document.getElementById('side-menu');
+        const hamburgerButton = document.querySelector('.hamburger');
+        if (!menu.contains(event.target) && !hamburgerButton.contains(event.target)) {
+            menu.classList.remove('open');
         }
-    </script>
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('side-menu').classList.toggle('open');
+    }
+</script>
 </body>
 </html>
