@@ -10,63 +10,63 @@
     <style>
 
         /* Botão do menu */
-.menu-toggle {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    border: none;
-    background: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: white;
-}
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
 
-.menu-toggle:hover {
-    background: none;
-    transform: none;
-}
+        .menu-toggle:hover {
+            background: none;
+            transform: none;
+        }
 
-/* Estilização do menu lateral */
-.offcanvas {
-    width: 150px;
-    background-color: #8b1d24;
-    color: white;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-}
+        /* Estilização do menu lateral */
+        .offcanvas {
+            width: 150px;
+            background-color: #8b1d24;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
 
-/* Quando o menu estiver aberto, manter a cor vermelha no fundo */
-.offcanvas.show {
-    background-color: #8b1d24;
-}
+        /* Quando o menu estiver aberto, manter a cor vermelha no fundo */
+        .offcanvas.show {
+            background-color: #8b1d24;
+        }
 
-/* Botão de fechar o menu */
-.offcanvas-header .btn-close {
-    filter: invert(1);
-}
+        /* Botão de fechar o menu */
+        .offcanvas-header .btn-close {
+            filter: invert(1);
+        }
 
-/* Estilização dos botões do menu */
-.offcanvas-body a {
-    display: block;
-    text-align: center;
-    padding: 10px;
-    background: white;
-    color: #8b1d24;
-    font-weight: bold;
-    border-radius: 15px;
-    transition: 0.3s;
-    text-decoration: none;
-    margin-bottom: 20px !important;
-}
+        /* Estilização dos botões do menu */
+        .offcanvas-body a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            color: #8b1d24;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            margin-bottom: 20px !important;
+        }
 
-.offcanvas-body a:last-child {
-    margin-bottom: 0;
-}
+        .offcanvas-body a:last-child {
+            margin-bottom: 0;
+        }
 
-.offcanvas-body a:hover {
-    background: #b71c1c;
-    color: white;
-}
+        .offcanvas-body a:hover {
+            background: #b71c1c;
+            color: white;
+        }
 
         * {
             margin: 0;
@@ -178,6 +178,45 @@
             right: 20px;
             height: 150px;
         }
+
+        /* Estilos para telas menores */
+        @media (max-width: 768px) {
+        .content {
+            margin: 10px;
+            padding: 15px; /* Menos padding */
+            max-width: 90%; /* Menor largura do card */
+            margin-left: auto;
+            margin-right: auto; /* Centraliza o card */
+            position: relative;
+            top: 20px; /* Abaixa o card um pouco */
+        }
+
+        .table-container input[type="search"] {
+            max-width: 100%;
+        }
+
+        .offcanvas-body a {
+            font-size: 1rem;
+        }
+
+        .menu-toggle {
+            font-size: 20px;
+            position: relative;
+            top: 10px;
+        }
+
+        .logo {
+            height: 100px;
+        }
+
+        .offcanvas {
+            width: 75%;
+        }
+    }
+    
+</style>
+
+
     </style>
 </head>
 <body>
@@ -194,9 +233,9 @@
     </div>
     <div class="offcanvas-body">
         <ul class="list-unstyled">
-            <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
+            <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
             <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
-            <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100">Dashboard</a></li>
+            <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100">Dashboard</a></li>
             <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
             <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
         </ul>

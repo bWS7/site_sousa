@@ -89,7 +89,7 @@ def send_pdf_to_user():
             new_pdf = PDFFile(
                 filename=filename,
                 user_id=session['user_id'],
-                file_type='pdf',
+                file_type=file_type,
                 file_data=file_data,
                 uploaded_at=get_sao_paulo_time()  # Define o horário de São Paulo na criação
             )
@@ -529,17 +529,16 @@ def logout():
 def view_pdf(pdf_id):
     # Recupera o arquivo PDF do banco de dados
     pdf_file = PDFFile.query.get_or_404(pdf_id)
+    
+    # Verifica se o arquivo já foi visualizado, se não, atualiza o campo 'first_viewed_at'
+    if not pdf_file.first_viewed_at:
+        pdf_file.first_viewed_at = datetime.now(pytz.timezone('America/Sao_Paulo'))
+        db.session.commit()
 
     # Verifica se o arquivo existe e se os dados do PDF estão presentes
     if not pdf_file.file_data:
         return "Arquivo não encontrado ou corrompido", 404
     
-    tz = pytz.timezone('America/Sao_Paulo')
-    uploaded_at = datetime.now(tz)  # Define o horário ajustado
-
-    tz = pytz.timezone('America/Sao_Paulo')
-    # Cria um novo registro no banco com os dados binários
-
     # Envia o arquivo PDF diretamente para o navegador, sem forçar o download
     return send_file(
         BytesIO(pdf_file.file_data),  # Cria o arquivo em memória a partir dos dados binários
@@ -547,7 +546,7 @@ def view_pdf(pdf_id):
         as_attachment=False,  # Não força o download
         mimetype='application/pdf'  # Tipo de mídia do arquivo
     )
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
     

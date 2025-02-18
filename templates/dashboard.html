@@ -15,13 +15,12 @@
         }
 
         .form-label h4 {
-    color: white;
-}
+            color: white;
+        }
 
-.form-label {
-    color: white;
-}
-
+        .form-label {
+            color: white;
+        }
 
         body {
             background: linear-gradient(45deg, #8b1d24, #333);
@@ -98,16 +97,16 @@
         }
 
         .logo {
-            position: absolute;
-            top: -20px;
-            right: 20px;
-            height: 150px;
-        }
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    height: 150px;
+}
 
         .container {
             padding: 20px;
             width: 100%;
-            flex-grow: 1; /* Garante que o conteúdo ocupe o espaço disponível */
+            flex-grow: 1;
         }
 
         .table td p {
@@ -119,77 +118,86 @@
         }
 
         /* Estilização da tabela */
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: separate;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: separate;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
 
-table, th, td {
-    border: 1px solid #444;
-}
+        table, th, td {
+            border: 1px solid #444;
+        }
 
-th, td {
-    padding: 15px;
-    text-align: left;
-}
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
 
-/* Cabeçalho da tabela */
-th {
-    background-color: #8b1d24 !important;
-    color: #fff;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    position: sticky; /* Fixa o cabeçalho ao rolar a tabela */
-    top: 0; /* Alinha o cabeçalho no topo */
-    z-index: 1; /* Garante que o cabeçalho fique acima das linhas */
-}
+        th {
+            background-color: #8b1d24 !important;
+            color: #fff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
 
-/* Linhas da tabela */
-td {
-    color: #fff;
-    font-size: 1rem;
-}
+        td {
+            color: #fff;
+            font-size: 1rem;
+        }
 
-/* Efeito de hover nas linhas */
-tr:hover td {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px); /* Efeito de elevação mais suave */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-/* Remove o efeito de hover no cabeçalho */
-tr:hover th {
-    transform: none; /* Garante que o cabeçalho não se mova */
-    box-shadow: none; /* Remove a sombra do cabeçalho */
-}
+        tr:hover th {
+            transform: none;
+            box-shadow: none;
+        }
 
-/* Centraliza o botão */
-.btn-primary {
-    display: block;  /* Faz o botão ocupar toda a largura disponível */
-    margin: 20px auto; /* Centraliza horizontalmente */
-    background-color: #28a745; /* Verde chamativo */
-    border: none;
-    padding: 12px 24px;
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    text-align: center;
-    transition: all 0.3s ease-in-out; /* Suaviza a transição */
-}
+        .btn-primary {
+            display: block;
+            margin: 20px auto;
+            background-color: #28a745;
+            border: none;
+            padding: 12px 24px;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
 
-/* Efeito de hover */
-.btn-primary:hover {
-    background-color: #218838; /* Verde um pouco mais escuro */
-    transform: scale(1.05); /* Aumenta ligeiramente ao passar o mouse */
-}
+        .btn-primary1 {
+            display: block;
+            margin:5px auto;
+            background-color: #28a745;
+            border: none;
+            padding: 6px 12px;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 10px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
 
+
+        .btn-primary:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
 
         .card {
             background: linear-gradient(45deg, #8b1d24, #333);
@@ -247,12 +255,91 @@ tr:hover th {
         }
 
         html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Evitar rolagem horizontal */
-}
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
 
+        /* Media Queries para Responsividade */
+
+        @media (max-width: 768px) {
+            .logo {
+                height: 120px;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .table {
+                width: 100%;
+                font-size: 0.9rem;
+            }
+
+            .card {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .menu-toggle {
+                font-size: 28px;
+                top: 10px;
+                left: 10px;
+            }
+
+            .offcanvas {
+                width: 100%;
+            }
+
+            .btn-primary {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .btn-custom, .btn-danger {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            
+            .btn-primary {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            .btn-custom, .btn-danger {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            .logo {
+        height: 100px; /* Reduz o tamanho da logo */
+        top: -15px; /* Ajusta a posição para cima */
+        right: 10px; /* Mantém no canto superior direito */
+            }
+
+    header h1 {
+        text-align: center; /* Garante que o título fique centralizado */
+        margin-top: 55px;
+    }
+
+    @media (max-width: 768px) {
+    .table td:nth-child(1), /* Se a coluna "Arquivo" for a terceira */
+    .table th:nth-child(1) {
+        max-width: 100px; /* Ajuste conforme necessário */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+}
     </style>
 </head>
 <body>
@@ -268,9 +355,9 @@ tr:hover th {
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled">
-                <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
+                <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
                 <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
-                <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100">Dashboard</a></li>
+                <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100">Dashboard</a></li>
                 <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
                 <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
             </ul>
@@ -290,10 +377,9 @@ tr:hover th {
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Nome do Arquivo</th>
-                        <th scope="col">Tipo de Nota Fiscal</th>
-                        <th scope="col">Visualização</th>
-                        <th scope="col">Enviado Por</th>
+                        <th scope="col">Arquivo</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Visto</th>
                         <th scope="col">Ação</th>
                     </tr>
                 </thead>
@@ -306,19 +392,12 @@ tr:hover th {
                             {% if pdf.first_viewed_at %}
                                 {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
                             {% else %}
-                                Não visualizado
+                                Não disponível
                             {% endif %}
                         </td>
-                        <td>Administrador</td>
                         <td>
-                            {% if data.pdf_files %}
-                            {% for pdf in data.pdf_files %}
-                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a>
-                            {% endfor %}
-                            {% else %}
-                            <p>Sem ações</p>
-                            {% endif %}
-                        </td>
+                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary1" target="_blank">Visualizar</a>
+                        </td>                        
                     </tr>
                     {% else %}
                     <tr>
@@ -337,9 +416,9 @@ tr:hover th {
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Nome do Arquivo</th>
-                        <th scope="col">Tipo de Nota Fiscal</th>
-                        <th scope="col">Horário de Envio</th>
+                        <th scope="col">Arquivo</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Envio</th>
                         <th scope="col">Ação</th>
                     </tr>
                 </thead>
@@ -356,9 +435,7 @@ tr:hover th {
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ url_for('visualizar_pdf', file_id=pdf.id) }}" target="_blank">
-                                Visualizar PDF
-                            </a>
+                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary1" target="_blank">Visualizar</a>
                         </td>
                     </tr>
                     {% else %}

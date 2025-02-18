@@ -8,24 +8,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
     <style>
-        * {
+          * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         .form-label h4 {
-    color: white;
-}
+            color: white;
+        }
 
-.form-label h3 {
-    color: rgb(7, 7, 7);
-}
+        .form-label h3 {
+            color: rgb(7, 7, 7);
+        }
 
-.form-label {
-    color: rgb(0, 0, 0);
-}
-
+        .form-label {
+            color: rgb(0, 0, 0);
+        }
 
         body {
             background: linear-gradient(45deg, #8b1d24, #333);
@@ -50,7 +49,6 @@
             color: white;
         }
 
-        /* Botão do menu */
         .menu-toggle {
             position: absolute;
             top: 20px;
@@ -68,7 +66,6 @@
             transform: none;
         }
 
-        /* Estilização do menu lateral */
         .offcanvas {
             width: 250px;
             background-color: #8b1d24;
@@ -111,82 +108,62 @@
         .container {
             padding: 20px;
             width: 100%;
-            flex-grow: 1; /* Garante que o conteúdo ocupe o espaço disponível */
+            flex-grow: 1;
         }
 
-        .table td p {
-            margin: 0;
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: separate;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .table th, .table td {
-            border-radius: 8px;
+        table, th, td {
+            border: 1px solid #444;
         }
 
-        /* Estilização da tabela */
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: separate;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
 
-table, th, td {
-    border: 1px solid #444;
-}
+        th {
+            background-color: #8b1d24 !important;
+            color: #fff;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
 
-th, td {
-    padding: 15px;
-    text-align: left;
-}
+        td {
+            color: #fff;
+            font-size: 1rem;
+        }
 
-/* Cabeçalho da tabela */
-th {
-    background-color: #8b1d24 !important;
-    color: #fff;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    position: sticky; /* Fixa o cabeçalho ao rolar a tabela */
-    top: 0; /* Alinha o cabeçalho no topo */
-    z-index: 1; /* Garante que o cabeçalho fique acima das linhas */
-}
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-/* Linhas da tabela */
-td {
-    color: #fff;
-    font-size: 1rem;
-}
+        .btn-primary {
+            background-color: #8b1d24;
+            border: none;
+            padding: 8px 20px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-/* Efeito de hover nas linhas */
-tr:hover td {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px); /* Efeito de elevação mais suave */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Remove o efeito de hover no cabeçalho */
-tr:hover th {
-    transform: none; /* Garante que o cabeçalho não se mova */
-    box-shadow: none; /* Remove a sombra do cabeçalho */
-}
-
-/* Botões na tabela */
-.btn-primary {
-    background-color: #8b1d24;
-    border: none;
-    padding: 8px 20px;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.btn-primary:hover {
-    background-color: #b71c1c;
-}
-
+        .btn-primary:hover {
+            background-color: #b71c1c;
+        }
 
         .card {
             background: linear-gradient(45deg, #8b1d24, #333);
@@ -244,37 +221,61 @@ tr:hover th {
         }
 
         html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Evitar rolagem horizontal */
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .form-control {
+            border-radius: 6px;
+            border: 2px solid #8b1d24;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 6px rgba(139, 29, 36, 0.5);
+            border-color: #8b1d24;
+            outline: none;
+        }
+
+        /* Responsividade */
+        /* Responsividade */
+        @media (max-width: 768px) {
+    .card {
+        width: 90% !important; /* Aumenta a largura do card para 90% da tela */
+        margin: 20px auto; /* Centraliza o card */
+        padding: 35px; /* Aumenta o padding do card */
+    }
+
+    header h1 {
+        font-size: 2rem;
+        margin-top: 40px; /* Desce o título, aumentando a margem superior */
+    }
+
+    .logo {
+        height: 120px;
+    }
+
+    .menu-toggle {
+        font-size: 28px;
+    }
+
+    .offcanvas {
+        width: 200px;
+    }
 }
-
-/* Cartão */
-.card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .card:hover {
-        transform: scale(1.02);
-    }
-
-    /* Inputs */
-    .form-control {
-        border-radius: 6px;
-        border: 2px solid #8b1d24;
-    }
-
-    .form-control:focus {
-        box-shadow: 0 0 6px rgba(139, 29, 36, 0.5);
-        border-color: #8b1d24;
-        outline: none;
-    }
-
     </style>
 </head>
 <body>
@@ -290,7 +291,7 @@ tr:hover th {
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled">
-                <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
+                <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
                 <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
                 <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100">Dashboard</a></li>
                 <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
