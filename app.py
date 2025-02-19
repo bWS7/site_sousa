@@ -38,6 +38,53 @@ def get_sao_paulo_time():
     tz = pytz.timezone('America/Sao_Paulo')
     return datetime.now(tz)  # Removendo a conversão para UTC
 
+class PDFFile(db.Model):
+    __tablename__ = 'pdf_file'
+
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Quem enviou o arquivo
+    sent_to_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Para quem o arquivo foi enviado
+    file_type = db.Column(db.String(50), nullable=False, default='pdf')
+    first_viewed_at = db.Column(db.DateTime)
+    file_data = db.Column(db.LargeBinary)
+    empreendimento = db.Column(db.String(255))
+    bloco = db.Column(db.String(255))
+    unidade = db.Column(db.String(255))
+    number_nf = db.Column(db.String(255))
+    valor = db.Column(db.String(255))
+    uploaded_at = db.Column(db.DateTime(timezone=True), default=get_sao_paulo_time)
+
+     # Relacionamento para quem enviou o arquivo
+    user_sender = db.relationship('User', back_populates='pdf_files_sent', foreign_keys=[user_id])
+
+    # Relacionamento para quem recebeu o arquivo
+    user_receiver = db.relationship('User', back_populates='pdf_files_received', foreign_keys=[sent_to_user_id])
+
+    def __init__(self, filename, user_id, sent_to_user_id, file_type='pdf', file_data=None, first_viewed_at=None, uploaded_at=None, empreendimento=None, bloco=None, unidade=None, number_nf=None, valor=None):
+        self.filename = filename
+        self.user_id = user_id
+        self.sent_to_user_id = sent_to_user_id
+        self.file_type = file_type
+        self.file_data = file_data
+        self.first_viewed_at = first_viewed_at
+        self.uploaded_at = uploaded_at
+        self.empreendimento = empreendimento
+        self.bloco = bloco
+        self.unidade = unidade
+        self.number_nf = number_nf
+        self.valor = valor
+        
+    # Função para verificar se o usuário é um "master"
+def is_master(user_id):
+    # Verifica o papel do usuário no banco de dados
+    user = User.query.get(user_id)
+    return user and user.role == 'master'
+
+# Criar tabelas se não existirem
+with app.app_context():
+    db.create_all()
+
 # Modelo do Usuário
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,8 +98,9 @@ class User(db.Model):
     
 
     # Relacionamento com os arquivos PDF
-    pdf_files = db.relationship('PDFFile', back_populates='user', lazy=True)
-
+    pdf_files_sent = db.relationship('PDFFile', back_populates='user_sender', foreign_keys=[PDFFile.user_id])
+    pdf_files_received = db.relationship('PDFFile', back_populates='user_receiver', foreign_keys=[PDFFile.sent_to_user_id])
+    
     # Método de verificação de senha (sem hash)
     def check_password(self, password):
         return self.password == password  # Comparação direta com a senha em texto simples
@@ -89,6 +137,7 @@ def send_pdf_to_user():
             new_pdf = PDFFile(
                 filename=filename,
                 user_id=session['user_id'],
+                sent_to_user_id=user_id, # Adicione esta linha,
                 file_type=file_type,
                 file_data=file_data,
                 uploaded_at=get_sao_paulo_time()  # Define o horário de São Paulo na criação
@@ -154,47 +203,6 @@ def validar_senha():
     
 
 # Modelo de Arquivo PDF
-class PDFFile(db.Model):
-    __tablename__ = 'pdf_file'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(100))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    file_type = db.Column(db.String(50), nullable=False, default='pdf')
-    first_viewed_at = db.Column(db.DateTime)
-    file_data = db.Column(db.LargeBinary)  # Coluna para armazenar o conteúdo binário do arquivo PDF
-    empreendimento = db.Column(db.String(255))
-    bloco = db.Column(db.String(255))
-    unidade = db.Column(db.String(255))
-    number_nf = db.Column(db.String(255))
-    valor = db.Column(db.String(255))
-    uploaded_at = db.Column(db.DateTime(timezone=True), default=get_sao_paulo_time)
-
-    # Relacionamento com o usuário
-    user = db.relationship('User', back_populates='pdf_files')
-
-    def __init__(self, filename, user_id, file_type='pdf', file_data=None, first_viewed_at=None, uploaded_at=None, empreendimento=None, bloco=None, unidade=None, number_nf=None, valor=None):
-        self.filename = filename
-        self.user_id = user_id
-        self.file_type = file_type
-        self.file_data = file_data
-        self.first_viewed_at = first_viewed_at
-        self.uploaded_at = uploaded_at
-        self.empreendimento = empreendimento
-        self.bloco = bloco
-        self.unidade = unidade
-        self.number_nf = number_nf
-        self.valor = valor
-        
-    # Função para verificar se o usuário é um "master"
-def is_master(user_id):
-    # Verifica o papel do usuário no banco de dados
-    user = User.query.get(user_id)
-    return user and user.role == 'master'
-
-# Criar tabelas se não existirem
-with app.app_context():
-    db.create_all()
 
 @app.route('/')
 def home():
@@ -257,20 +265,20 @@ def admin_dashboard():
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
+
     user = User.query.get(session['user_id'])
 
     # Se o usuário for master, redireciona para a master_dashboard
     if user.role == 'master':
         return redirect(url_for('master_dashboard'))
-    
+
     # Filtra os arquivos do usuário comum
     pdf_files = PDFFile.query.filter_by(user_id=user.id).all()
 
     # Busca os arquivos enviados pelo master (agora de forma dinâmica)
     master_user = User.query.filter_by(role='master').first()
     if master_user:
-        master_files = PDFFile.query.filter_by(user_id=master_user.id).all()
+        master_files = PDFFile.query.filter_by(user_id=master_user.id, sent_to_user_id=user.id).all()
     else:
         master_files = []
 
@@ -323,11 +331,10 @@ def master_dashboard():
     # Consulta todos os usuários (exceto master) com seus arquivos PDF associados
     user_pdf_data = (
         db.session.query(User, PDFFile)
-        .join(PDFFile)
-        .filter(User.role != 'master')  # Exclui arquivos de usuários master
+        .join(PDFFile, User.id == PDFFile.user_id)  # Join para quem recebeu (sent_to_user_id)
+        .filter(User.role != 'master')
         .all()
     )
-
     # Organiza os dados para facilitar a renderização
     user_pdf_data_processed = {}
     for user, pdf_file in user_pdf_data:
@@ -415,6 +422,11 @@ def upload():
     if file.filename == '':
         return redirect(url_for('dashboard'))
     
+    user_id_logged = session.get('user_id')
+
+    if user_id_logged is None:
+        return "Usuário não logado", 400  # Ou redirecione para o login
+    
     file_type = request.form['file_type']
     if file_type not in ['adiantamento', 'comissao', 'premio']:
         return redirect(url_for('dashboard'))  # Ou exibe uma mensagem de erro
@@ -436,6 +448,7 @@ def upload():
     new_file = PDFFile(
         filename=secure_filename(file.filename),  # Nome seguro do arquivo
         user_id=session['user_id'],  # ID do usuário a quem o arquivo pertence
+        sent_to_user_id=user_id_logged,  # Para quem foi enviado (usuário logado)
         file_type=file_type,  # Tipo do arquivo
         file_data=file_data,  # Dados binários do arquivo
         uploaded_at=uploaded_at,

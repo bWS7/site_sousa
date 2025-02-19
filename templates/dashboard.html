@@ -377,10 +377,10 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Arquivo</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Visto</th>
-                        <th scope="col">Ação</th>
+                        <th>Arquivo</th>
+                        <th>Tipo</th>
+                        <th>Visto</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -390,18 +390,18 @@
                         <td>{{ pdf.file_type|capitalize }}</td>
                         <td>
                             {% if pdf.first_viewed_at %}
-                                {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
+                            {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
                             {% else %}
-                                Não disponível
+                            Não disponível
                             {% endif %}
                         </td>
                         <td>
                             <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary1" target="_blank">Visualizar</a>
-                        </td>                        
+                        </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="5" class="text-center">Nenhum arquivo disponível.</td>
+                        <td colspan="4" class="text-center">Nenhum arquivo disponível.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
