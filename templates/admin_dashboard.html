@@ -53,7 +53,7 @@
         th {
             background-color: #8b1d24 !important;
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.1rem;
             position: sticky;
@@ -233,7 +233,8 @@
             <ul class="list-unstyled">
                 <li><a href="https://site-sousa.onrender.com/admin_dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
                 <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
-                <li><a href="https://site-sousa.onrender.com/admin_dashboard" class="btn btn-light w-100">Visualizar</a></li>
+                <li><a href="https://site-sousa.onrender.com/admin_dashboard" class="btn btn-light w-100">Notas enviadas</a></li>
+                <li><a href="https://site-sousa.onrender.com/checklist" class="btn btn-light w-100 mb-2">Checklist</a></li> 
                 <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100">Dashboard</a></li>
                 <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
                 <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
@@ -252,24 +253,33 @@
             </select>
         </div>
 
-        <label for="regiao" class="form-label label-title"><h4>Arquivos enviados na região {{ user.regiao }}:</h4></label>
         <table class="table">
             <thead>
                 <tr>
                     <th>Usuário</th>
-                    <th>Nome do Arquivo</th>
-                    <th>Data de Envio</th>
+                    <th>Arquivo Postado</th>
                     <th>Tipo de Arquivo</th>
-                    <th>Ação</th>
+                    <th>Empreendimento</th>
+                    <th>Bloco</th>
+                    <th>Unidade</th>
+                    <th>Valor</th>
+                    <th>N° Nota fiscal</th>
+                    <th>Data de Envio</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 {% for pdf in pdf_files %}
                 <tr>
-                    <td>{{ pdf.user.name }}</td>
+                    <td>{{ pdf.user_sender.name }}</td>
                     <td>{{ pdf.filename }}</td>
-                    <td>{{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</td>
                     <td>{{ pdf.file_type }}</td>
+                    <td>{{ pdf.empreendimento }}</td>
+                    <td>{{ pdf.bloco }}</td>
+                    <td>{{ pdf.unidade }}</td>
+                    <td>R${{ pdf.valor }}</td>
+                    <td>{{ pdf.number_nf }}</td>
+                    <td>{{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</td>
                     <td><a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a></td>
                 </tr>
                 {% endfor %}

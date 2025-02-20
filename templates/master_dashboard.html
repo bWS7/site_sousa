@@ -53,7 +53,7 @@ th, td {
 th {
     background-color: #8b1d24 !important;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.1rem;
     position: sticky; /* Fixa o cabeçalho ao rolar a tabela */
@@ -275,6 +275,7 @@ tr:hover th {
                 <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
                 <li><a href="{{ url_for('novo_usuario') }}" class="btn btn-light w-100">Cadastrar</a></li>
                 <li><a href="https://site-sousa.onrender.com/usuarios" class="btn btn-light w-100 mb-2">Usuarios</a></li>
+                <li><a href="https://site-sousa.onrender.com/checklist" class="btn btn-light w-100 mb-2">Checklist</a></li> 
                 <li><a href="{{ url_for('send_pdf_to_user') }}" class="btn btn-light w-100">Envio de PDF</a></li>
                 <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100">Dashboard</a></li>
                 <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
@@ -316,6 +317,9 @@ tr:hover th {
                         <th>Arquivo Postado</th>
                         <th>Tipo de Arquivo</th>
                         <th>Empreendimento</th>
+                        <th>Bloco</th>
+                        <th>Unidade</th>
+                        <th>Valor</th>
                         <th>N° Nota fiscal</th>
                         <th>Data de Envio</th>
                         <th>Ações</th>
@@ -328,6 +332,9 @@ tr:hover th {
                         <td>{{ pdf.filename }}</td>
                         <td>{{ pdf.file_type }}</td>
                         <td>{{ pdf.empreendimento }}</td>
+                        <td>{{ pdf.bloco }}</td>
+                        <td>{{ pdf.unidade }}</td>
+                        <td>R${{ pdf.valor }}</td>
                         <td>{{ pdf.number_nf }}</td>
                         <td>
                             {% if pdf.uploaded_at %}

@@ -16,6 +16,8 @@ from io import BytesIO
 from pytz import timezone
 from datetime import datetime
 import zipfile
+import pandas as pd
+
 # Inicializa o Flask
 app = Flask(__name__)
 
@@ -24,11 +26,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bruno_master:FYdi6BeYH3jRL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
-app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'txt'}  # Adicione as extensões permitidas, se necessário
+app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'txt', 'csv', 'xlsx', 'xls'}  # Adicione as extensões permitidas, se necessário
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {"options": "-c timezone=America/Sao_Paulo"}
 }
 
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'txt', 'csv', 'xlsx', 'xls'}  # Tipos de arquivos permitidos
 # Inicializa o SQLAlchemy
 db = SQLAlchemy(app)
 
@@ -38,6 +41,10 @@ migrate = Migrate(app, db)
 def get_sao_paulo_time():
     tz = pytz.timezone('America/Sao_Paulo')
     return datetime.now(tz)  # Removendo a conversão para UTC
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class PDFFile(db.Model):
     __tablename__ = 'pdf_file'
@@ -188,6 +195,18 @@ def perfil():
 def form():
     return render_template('forms.html')
 
+@app.route('/checklist', methods=['GET', 'POST'])
+def checklist():
+    if 'user_id' not in session:
+        return redirect(url_for('login')) 
+    
+    user = User.query.get(session['user_id']) # Busca os dados do usuário no banco de dados
+
+    if not user: # Verifica se o usuário existe
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('login'))
+    return render_template('checklist.html', user=user) # Passa o objeto 'user' para o template
+
 
 # Rota de validação de senha para AJAX
 @app.route('/validar-senha', methods=['POST'])
@@ -255,9 +274,9 @@ def admin_dashboard():
     # Buscar todos os usuários que pertencem à mesma região do admin
     users_in_region = User.query.filter_by(regiao=user.regiao).all()
     user_ids = [u.id for u in users_in_region]  # Lista de IDs de usuários da região
-
+    
+    pdf_files = PDFFile.query.join(User, User.id == PDFFile.user_id).filter(PDFFile.user_id.in_(user_ids)).all()
     # Buscar os arquivos enviados por usuários dessa região
-    pdf_files = PDFFile.query.filter(PDFFile.user_id.in_(user_ids)).all()
 
     return render_template('admin_dashboard.html', pdf_files=pdf_files, user=user)
 
