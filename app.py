@@ -103,6 +103,7 @@ class User(db.Model):
     role = db.Column(db.String(10), nullable=False, default='user')  # Tipo de usuário com valor padrão
     user_type = db.Column(db.String(20))  # Adiciona a coluna 'user_type'
     regiao = db.Column(db.String(100))  # Novo campo
+    empreendimento = db.Column(db.String(255))
     
 
     # Relacionamento com os arquivos PDF
@@ -254,6 +255,8 @@ def login():
                 return redirect(url_for('master_dashboard'))
             elif user.role == 'admin':
                 return redirect(url_for('admin_dashboard'))
+            elif user.role == 'coord':
+                return redirect(url_for('coordenador_dashboard'))
             else:
                 return redirect(url_for('dashboard'))
         else:
@@ -279,6 +282,33 @@ def admin_dashboard():
     # Buscar os arquivos enviados por usuários dessa região
 
     return render_template('admin_dashboard.html', pdf_files=pdf_files, user=user)
+
+@app.route('/coordenador_dashboard')
+def coordenador_dashboard():
+    print("Entrou na função coordenador_dashboard()")
+    if 'user_id' not in session:
+        print("user_id não está na sessão")
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    if user is None:
+        print("Usuário não encontrado")
+        return redirect(url_for('login'))
+
+    print(f"User role: {user.role}")
+    print(f"Conteúdo da sessão: {session}")
+
+    if user.role != 'coord':
+        print("Usuário não é coordenador")
+        return redirect(url_for('dashboard'))
+
+    # ... (resto do código)
+
+    # Busca os arquivos PDF com base no empreendimento do coordenador
+    pdf_files = PDFFile.query.filter_by(empreendimento=user.empreendimento).all()
+
+    return render_template('coordenador_dashboard.html', pdf_files=pdf_files, user=user)
+
 
 
 @app.route('/dashboard')
@@ -446,10 +476,12 @@ def cadastrar_usuario():
         password = request.form['password']
         role = request.form['role']
         user_type = request.form['user_type']
-        regiao = request.form['regiao']  # Obtendo o valor da região do formulário
+        regiao = request.form.getlist('regiao')  # Use getlist() para receber a lista de regiões
+        empreendimento = request.form.getlist('empreendimento')  # Use getlist() para receber a lista de empreendimentos
+
 
         # Adiciona o novo usuário no banco de dados
-        new_user = User(cnpj=cnpj, name=name, email=email, password=(password), role=role, user_type=user_type,regiao=regiao)
+        new_user = User(cnpj=cnpj, name=name, email=email, password=(password), role=role, user_type=user_type,regiao=regiao, empreendimento=empreendimento)
         db.session.add(new_user)
         db.session.commit()
 
