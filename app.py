@@ -476,7 +476,7 @@ def cadastrar_usuario():
         password = request.form['password']
         role = request.form['role']
         user_type = request.form['user_type']
-        regiao = request.form.getlist('regiao')  # Use getlist() para receber a lista de regiões
+        regiao = request.form['regiao']  # Use getlist() para receber a lista de regiões
         empreendimento = request.form.getlist('empreendimento')  # Use getlist() para receber a lista de empreendimentos
 
 
