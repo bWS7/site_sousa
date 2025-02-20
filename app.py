@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -15,6 +15,7 @@ from PyPDF2 import PdfFileReader
 from io import BytesIO
 from pytz import timezone
 from datetime import datetime
+import zipfile
 # Inicializa o Flask
 app = Flask(__name__)
 
@@ -330,11 +331,11 @@ def master_dashboard():
 
     # Consulta todos os usuários (exceto master) com seus arquivos PDF associados
     user_pdf_data = (
-        db.session.query(User, PDFFile)
-        .join(PDFFile, User.id == PDFFile.user_id)  # Join para quem recebeu (sent_to_user_id)
-        .filter(User.role != 'master')
-        .all()
-    )
+    db.session.query(User, PDFFile)
+    .join(PDFFile, User.id == PDFFile.user_id)  # Join explícito usando user_id
+    .filter(User.role != 'master')
+    .all()
+)
     # Organiza os dados para facilitar a renderização
     user_pdf_data_processed = {}
     for user, pdf_file in user_pdf_data:
@@ -352,7 +353,36 @@ def master_dashboard():
         })
 
     # Retorna a página master_dashboard com os dados dos usuários e PDFs
-    return render_template('master_dashboard.html', user=user, user_pdf_data=list(user_pdf_data_processed.values()))
+    return render_template('master_dashboard.html', user=user, user_pdf_data=user_pdf_data)
+
+@app.route('/download_mass', methods=['POST'])
+def download_mass():
+    file_type = request.form.get('file_type')
+
+    # Consulta os arquivos com base no filtro
+    query = db.session.query(PDFFile).join(User, User.id == PDFFile.user_id).filter(User.role != 'master') #Join explicito
+    if file_type:
+        query = query.filter(PDFFile.file_type == file_type)
+
+    pdf_files = query.all()
+
+    if not pdf_files:
+        return "Nenhum arquivo encontrado para download.", 404
+
+    # Cria um arquivo zip em memória
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for pdf_file in pdf_files:
+            filename = f"NF_{pdf_file.user_sender.name.upper()}_{pdf_file.empreendimento}_{pdf_file.number_nf}.pdf"  # Nome formatado
+            zipf.writestr(filename, pdf_file.file_data)  # Adiciona o arquivo ao zip
+
+    zip_buffer.seek(0)  # Volta ao início do buffer
+
+    response = make_response(zip_buffer.getvalue())
+    response.headers['Content-Type'] = 'application/zip'
+    response.headers['Content-Disposition'] = 'attachment; filename=arquivos.zip'
+
+    return response
 
 
 @app.route('/info')
@@ -543,6 +573,9 @@ def view_pdf(pdf_id):
     # Recupera o arquivo PDF do banco de dados
     pdf_file = PDFFile.query.get_or_404(pdf_id)
     
+    if not pdf_file:  # Simplificado
+        return "Arquivo não encontrado", 404
+    
     # Verifica se o arquivo já foi visualizado, se não, atualiza o campo 'first_viewed_at'
     if not pdf_file.first_viewed_at:
         pdf_file.first_viewed_at = datetime.now(pytz.timezone('America/Sao_Paulo'))
@@ -554,10 +587,10 @@ def view_pdf(pdf_id):
     
     # Envia o arquivo PDF diretamente para o navegador, sem forçar o download
     return send_file(
-        BytesIO(pdf_file.file_data),  # Cria o arquivo em memória a partir dos dados binários
-        download_name=pdf_file.filename,  # Nome do arquivo
-        as_attachment=False,  # Não força o download
-        mimetype='application/pdf'  # Tipo de mídia do arquivo
+        BytesIO(pdf_file.file_data),
+        download_name=pdf_file.filename,
+        as_attachment=False,  # Para abrir no navegador
+        mimetype='application/pdf'
     )
 
 if __name__ == '__main__':

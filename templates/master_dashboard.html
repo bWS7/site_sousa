@@ -218,6 +218,40 @@ tr:hover th {
     .filter-dropdown:hover {
         border-color: #b71c1c;
     }
+
+    .btn-primary1 {
+    background-color: #8b1d24; /* Cor de fundo */
+    border: none; /* Remove borda */
+    color: white; /* Cor do texto */
+    padding: 10px 20px; /* Ajusta o padding */
+    border-radius: 5px; /* Arredonda os cantos */
+    cursor: pointer; /* Muda o cursor ao passar por cima */
+    transition: background-color 0.3s ease; /* Transição suave na cor de fundo */
+    margin-top: 6px; /* Espaçamento do topo */
+}
+
+.btn-primary1:hover {
+    background-color: #b71c1c; /* Cor de fundo ao passar por cima */
+}
+
+.filter-button-container1 {
+    display: flex; /* Ativa o Flexbox */
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+    gap: 10px; /* Espaçamento entre os itens (opcional) */
+}
+
+.filter-dropdown1 {
+    width: auto; /* Ajuste a largura do filtro */
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #8b1d24;
+    border-radius: 25px;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s ease-in-out;
+    margin-bottom: 0; /* Remove margem inferior */
+}
 </style>
 
 </head>
@@ -272,79 +306,57 @@ tr:hover th {
 
     <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo">
 
+
     <div class="container">
         <div class="table-card">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Nome de Usuário</th>
-                        <th>Arquivos Postados</th>
+                        <th>Arquivo Postado</th>
                         <th>Tipo de Arquivo</th>
+                        <th>Empreendimento</th>
+                        <th>N° Nota fiscal</th>
                         <th>Data de Envio</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for data in user_pdf_data %}
-                    <tr class="{% if not data.pdf_files %}highlight-row{% endif %}">
-                        <td>{{ data.user.name }}</td>
+                    {% for user, pdf in user_pdf_data %}
+                    <tr>
+                        <td>{{ user.name }}</td>
+                        <td>{{ pdf.filename }}</td>
+                        <td>{{ pdf.file_type }}</td>
+                        <td>{{ pdf.empreendimento }}</td>
+                        <td>{{ pdf.number_nf }}</td>
                         <td>
-                            {% if data.pdf_files %}
-                            {% for pdf in data.pdf_files %}
-                            <p>{{ pdf.filename }}</p>
-                            {% endfor %}
+                            {% if pdf.uploaded_at %}
+                            {{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
                             {% else %}
-                            <p>Não subiu arquivos</p>
+                            <span style="color: red;">Data não disponível</span>
                             {% endif %}
                         </td>
                         <td>
-                            {% if data.pdf_files %}
-                            {% for pdf in data.pdf_files %}
-                            <p>{{ pdf.file_type }}</p>
-                            {% endfor %}
-                            {% else %}
-                            <p>Nenhum arquivo</p>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if data.pdf_files %}
-                            {% for pdf in data.pdf_files %}
-                            <p>
-                                {% if pdf.uploaded_at %}
-                                {{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
-                                {% else %}
-                                <span style="color: red;">Data não disponível</span>
-                                {% endif %}
-                            </p>
-                            {% endfor %}
-                            {% else %}
-                            <p>Não subiu arquivos</p>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if data.pdf_files %}
-                            {% for pdf in data.pdf_files %}
                             <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a>
-                            {% endfor %}
-                            {% else %}
-                            <p>Sem ações</p>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
-                    {% set excluded_users = ["master", "admin"] %}
-    {% for data in user_pdf_data %}
-        <!-- Verifica se o nome do usuário NÃO está na lista de excluídos -->
-        {% if data.user.name.lower() not in excluded_users %}
-            <tr class="{% if not data.pdf_files %}highlight-row{% endif %}">
-                <!-- Conteúdo da linha da tabela -->
-            </tr>
-        {% endif %}
-    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+
+    <form method="POST" action="{{ url_for('download_mass') }}">
+        <div class="filter-button-container1">
+            <select name="file_type" class="filter-dropdown1">
+                <option value="">Tipo de arquivo</option>
+                <option value="premio">Premiação</option>
+                <option value="adiantamento">Adiantamento</option>
+                <option value="comissao">Comissão</option>
+            </select>
+            <button type="submit" class="btn btn-primary1">Download</button>
+        </div>
+    </form>
 
 <script>
     function toggleMenu() {
