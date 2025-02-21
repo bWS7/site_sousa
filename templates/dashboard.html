@@ -416,7 +416,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Arquivo</th>
+                        <th scope="col">Empreendimento</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Envio</th>
                         <th scope="col">Ação</th>
@@ -425,7 +425,7 @@
                 <tbody>
                     {% for pdf in pdf_files %}
                     <tr>
-                        <td>{{ pdf.filename }}</td>
+                        <td>{{ pdf.empreendimento }}</td>
                         <td>{{ pdf.file_type|capitalize }}</td>
                         <td>
                             {% if pdf.uploaded_at %}
