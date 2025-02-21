@@ -170,14 +170,15 @@
                         <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Administrador</option>
                         <option value="user" {% if user.role == 'user' %}selected{% endif %}>Usuário</option>
                         <option value="master" {% if user.role == 'master' %}selected{% endif %}>Usuário Master</option>
+                        <option value="coord" {% if user.role == 'coord' %}selected{% endif %}>Coordenador</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="user_type">Categoria:</label>
                     <select id="user_type" name="user_type" class="form-control" required>
-                        <option value="house" {% if user.user_type == 'house' %}selected{% endif %}>House</option>
-                        <option value="imobiliaria" {% if user.user_type == 'imobiliaria' %}selected{% endif %}>Imobiliária</option>
-                        <option value="corretor_autonomo" {% if user.user_type == 'corretor_autonomo' %}selected{% endif %}>Corretor Autônomo</option>
+                        <option value="House" {% if user.user_type == 'House' %}selected{% endif %}>House</option>
+                        <option value="Imobiliaria" {% if user.user_type == 'Imobiliaria' %}selected{% endif %}>Imobiliária</option>
+                        <option value="Corretor Autonomo" {% if user.user_type == 'Corretor Autonomo' %}selected{% endif %}>Corretor Autônomo</option>
                         <option value="Superintendente" {% if user.user_type == 'Superintendente' %}selected{% endif %}>Superintendente Regional</option>
                         <option value="Supervisor" {% if user.user_type == 'Supervisor' %}selected{% endif %}>Supervisor</option>
                         <option value="Coordenador" {% if user.user_type == 'Coordenador' %}selected{% endif %}>Coordenador</option>
