@@ -283,6 +283,28 @@ def admin_dashboard():
 
     return render_template('admin_dashboard.html', pdf_files=pdf_files, user=user)
 
+@app.route('/solicitado')
+def solicitado():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+
+    if user.role not in ('admin', 'master', 'coord'):
+       return redirect(url_for('dashboard'))
+
+    master_user = User.query.filter_by(role='master').first()
+
+    if master_user:
+        if user.role in ('master', 'admin', 'coord'):  # Master, admin e coord veem os arquivos do master
+            pdf_files = PDFFile.query.filter_by(user_id=master_user.id).all()
+        else:
+            pdf_files = []  # Outros usuários não têm acesso
+    else:
+        pdf_files = []  # Caso não encontre o usuário master
+
+    return render_template('solicitado.html', pdf_files=pdf_files, user=user)
+
 @app.route('/coordenador_dashboard')
 def coordenador_dashboard():
     print("Entrou na função coordenador_dashboard()")

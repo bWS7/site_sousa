@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Master</title>
+    <title>Solicitações</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
     <style>
@@ -258,7 +258,7 @@ tr:hover th {
 
 <body>
     <header>
-        <h1>Construtora Sousa Araujo</h1>
+        <h1>Solicitações Enviadas</h1>
     </header>
 
     <div class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">☰ Menu</div>
@@ -276,7 +276,6 @@ tr:hover th {
                 <li><a href="{{ url_for('novo_usuario') }}" class="btn btn-light w-100">Cadastrar</a></li>
                 <li><a href="https://site-sousa.onrender.com/usuarios" class="btn btn-light w-100 mb-2">Usuarios</a></li>
                 <li><a href="https://site-sousa.onrender.com/checklist" class="btn btn-light w-100 mb-2">Checklist</a></li> 
-                <li><a href="https://site-sousa.onrender.com/solicitado" class="btn btn-light w-100 mb-2">Solicitações Enviadas</a></li>
                 <li><a href="{{ url_for('send_pdf_to_user') }}" class="btn btn-light w-100">Envio de PDF</a></li>
                 <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100">Dashboard</a></li>
                 <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
@@ -298,6 +297,7 @@ tr:hover th {
             <option value="comissao">Comissão</option>
         </select>
     </div>
+
     <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo">
 
 
@@ -306,38 +306,33 @@ tr:hover th {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nome de Usuário</th>
-                        <th>Arquivo Postado</th>
+                        <th>Nome do Arquivo</th>
                         <th>Tipo de Arquivo</th>
-                        <th>Empreendimento</th>
-                        <th>Bloco</th>
-                        <th>Unidade</th>
-                        <th>Valor</th>
-                        <th>N° Nota fiscal</th>
-                        <th>Data de Envio</th>
+                        <th>Horário de Envio</th>
+                        <th>Horário de Visualização</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user, pdf in user_pdf_data %}
-                    <tr>
-                        <td>{{ user.name }}</td>
-                        <td>{{ pdf.filename }}</td>
-                        <td>{{ pdf.file_type }}</td>
-                        <td>{{ pdf.empreendimento }}</td>
-                        <td>{{ pdf.bloco }}</td>
-                        <td>{{ pdf.unidade }}</td>
-                        <td>R${{ pdf.valor }}</td>
-                        <td>{{ pdf.number_nf }}</td>
+                    {% for file in pdf_files %}  <tr>
+                        <td>{{ file.filename }}</td>
+                        <td>{{ file.file_type }}</td>
                         <td>
-                            {% if pdf.uploaded_at %}
-                            {{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
+                            {% if file.uploaded_at %}
+                            {{ file.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
                             {% else %}
                             <span style="color: red;">Data não disponível</span>
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary" target="_blank">Visualizar</a>
+                            {% if file.first_viewed_at %}
+                            {{ file.first_viewed_at.strftime('%d/%m/%Y %H:%M') }}
+                            {% else %}
+                            <span style="color: red;">Data não disponível</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('view_pdf', pdf_id=file.id) }}" class="btn btn-primary" target="_blank">Visualizar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -345,18 +340,6 @@ tr:hover th {
             </table>
         </div>
     </div>
-
-    <form method="POST" action="{{ url_for('download_mass') }}">
-        <div class="filter-button-container1">
-            <select name="file_type" class="filter-dropdown1">
-                <option value="">Tipo de arquivo</option>
-                <option value="premio">Premiação</option>
-                <option value="adiantamento">Adiantamento</option>
-                <option value="comissao">Comissão</option>
-            </select>
-            <button type="submit" class="btn btn-primary1">Download</button>
-        </div>
-    </form>
 
 <script>
     function toggleMenu() {
@@ -371,28 +354,27 @@ tr:hover th {
         let rows = document.querySelectorAll(".table tbody tr");
 
         rows.forEach(row => {
-            let userName = row.cells[0].textContent.toLowerCase();
-            row.style.display = userName.includes(input) ? "" : "none";
+            let fileName = row.cells[0].textContent.toLowerCase(); // Pesquisa por nome do arquivo
+            row.style.display = fileName.includes(input) ? "" : "none";
         });
 
         filterTable(); // Aplica o filtro de tipo de arquivo também
     }
 
     function filterTable() {
-    let filter = document.getElementById("fileTypeFilter").value.toLowerCase();
-    let rows = document.querySelectorAll(".table tbody tr");
+        let filter = document.getElementById("fileTypeFilter").value.toLowerCase();
+        let rows = document.querySelectorAll(".table tbody tr");
 
-    rows.forEach(row => {
-        let fileType = row.cells[2].textContent.toLowerCase(); // Coluna de Tipo de Arquivo
-        
-        if (fileType.includes(filter) || filter === "") {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-}
+        rows.forEach(row => {
+            let fileType = row.cells[1].textContent.toLowerCase(); // Filtra por tipo de arquivo (índice 1)
 
+            if (fileType.includes(filter) || filter === "") {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

@@ -390,7 +390,7 @@
                         <td>{{ pdf.file_type|capitalize }}</td>
                         <td>
                             {% if pdf.first_viewed_at %}
-                            {{ pdf.first_viewed_at.strftime('%d/%m/%Y %H:%M:%S') }}
+                            {{ pdf.first_viewed_at.strftime('%d/%m %H:%M') }}
                             {% else %}
                             Não disponível
                             {% endif %}
@@ -429,7 +429,7 @@
                         <td>{{ pdf.file_type|capitalize }}</td>
                         <td>
                             {% if pdf.uploaded_at %}
-                                {{ pdf.uploaded_at.strftime('%d/%m/%Y %H:%M:%S') }}
+                                {{ pdf.uploaded_at.strftime('%d/%m %H:%M') }}
                             {% else %}
                                 Não disponível
                             {% endif %}
