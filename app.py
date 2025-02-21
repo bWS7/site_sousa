@@ -22,7 +22,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bruno_master:FYdi6BeYH3jRL0YOqt4XmInNwUOJlr0S@dpg-cul7u3jv2p9s73a4ru2g-a.oregon-postgres.render.com/test_4jyn'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ars291576@localhost:5432/test'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Caminho absoluto para o diretório de uploads
@@ -611,7 +611,7 @@ def edit_user(user_id):
             if master_password != 'senha_do_master':
                 flash('Senha do master incorreta!', 'danger')
                 return redirect(url_for('edit_user', user_id=user_id))  # Redireciona de volta à edição
-
+            
         # Atualizar os dados do usuário no banco de dados
         user.name = request.form['name']
         user.email = request.form['email']
@@ -621,6 +621,10 @@ def edit_user(user_id):
         user.user_type = request.form['user_type']
         user.regiao = request.form['regiao']
         
+        empreendimentos_selecionados = request.form.getlist('empreendimentos') # Agora, reatribui o valor da lista caso seja POST
+
+        user.empreendimento = ','.join(empreendimentos_selecionados)
+
         db.session.commit()
         
         flash('Alterações salvas com sucesso!', 'success')

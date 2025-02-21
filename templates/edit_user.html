@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Usuário</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Usuário</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png"
+    href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chosen-js@1.8.7/chosen.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chosen-js@1.8.7/chosen.jquery.min.js"></script>
     <style>
         body {
             background: linear-gradient(45deg, #8b1d24, #333);
@@ -186,6 +192,47 @@
                         <option value="RVP" {% if user.regiao == 'RVP' %}selected{% endif %}>RVP</option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label for="empreendimento" class="form-label">Empreendimentos:</label>
+                    <select id="empreendimento" name="empreendimentos" class="form-control" multiple>
+                      <option value="">Selecionar:</option>
+                      <option value="TANGARA I">TANGARA I</option>
+                      <option value="AMETISTA">AMETISTA</option>
+                      <option value="CEREJEIRAS">CEREJEIRAS</option>
+                      <option value="CEREJEIRAS II">CEREJEIRAS II</option>
+                      <option value="FLORENÇA">FLORENÇA</option>
+                      <option value="GRAN PORTINARI">GRAN PORTINARI</option>
+                      <option value="MONET">MONET</option>
+                      <option value="PORTAL DO LAGO">PORTAL DO LAGO</option>
+                      <option value="RESIDENCIAL TURMALINA">RESIDENCIAL TURMALINA</option>
+                      <option value="SAFIRA I">SAFIRA I</option>
+                      <option value="SAFIRA II">SAFIRA II</option>
+                      <option value="SIENA">SIENA</option>
+                      <option value="SOU MAIS GUAIANASES">SOU MAIS GUAIANASES</option>
+                      <option value="SOU MAIS SUZANO">SOU MAIS SUZANO</option>
+                      <option value="SOU PLENO HOME">SOU PLENO HOME</option>
+                      <option value="SOU PLENO JACAREI">SOU PLENO JACAREI</option>
+                      <option value="SOU PLENO LIFE">SOU PLENO LIFE</option>
+                      <option value="SOU PLENO LIFE II">SOU PLENO LIFE II</option>
+                      <option value="SOU PLENO PAISAGE - HORTOLANDIA">SOU PLENO PAISAGE - HORTOLANDIA</option>
+                      <option value="SOU PLENO PAISAGE II">SOU PLENO PAISAGE II</option>
+                      <option value="SOU PLENO VISAGE - HORTOLANDIA">SOU PLENO VISAGE - HORTOLANDIA</option>
+                      <option value="SOU SPECIAL MOMENT">SOU SPECIAL MOMENT</option>
+                      <option value="SOU SPECIAL PLACE">SOU SPECIAL PLACE</option>
+                      <option value="SOU VIVER JACAREI (DAVI LINO)">SOU VIVER JACAREI (DAVI LINO)</option>
+                      <option value="SOU VIVER NOVA ODESSA">SOU VIVER NOVA ODESSA</option>
+                      <option value="SOU VIVER POA">SOU VIVER POA</option>
+                      <option value="SOU VIVER RAVENNA">SOU VIVER RAVENNA</option>
+                      <option value="SOU VIVER TAUBATE">SOU VIVER TAUBATE</option>
+                      <option value="SOU VIVER TAUBATE II">SOU VIVER TAUBATE II</option>
+                      <option value="SOU VIVER VERONA">SOU VIVER VERONA</option>
+                      <option value="SOU VIVER VICENZA">SOU VIVER VICENZA</option>
+                      <option value="TANGARA I">TANGARA I</option>
+                      <option value="TANGARA II">TANGARA II</option>
+                      <option value="TANGARA III">TANGARA III</option>
+                      <option value="VIDALIA">VIDALIA</option>
+                    </select>
+                  </div>
                 <div class="form-group">
                     <label for="password">Nova senha:</label>
                     <input type="password" id="password" name="password" value="{{ user.password }}" class="form-control">
@@ -194,7 +241,12 @@
             </form>
         </div>
     </div>
-
+    <script>
+        $(document).ready(function () {
+          $("#regiao").chosen();
+          $("#empreendimento").chosen();
+        });
+      </script>
     <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

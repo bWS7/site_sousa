@@ -209,6 +209,7 @@ html, body {
                 <th>Tipo de Usuário</th>
                 <th>Regional</th>
                 <th>Colaborador</th>
+                <th>Empreendimento</th>
                 <th>Ações</th> <!-- Nova coluna para os botões -->
             </tr>
         </thead>
@@ -223,6 +224,7 @@ html, body {
                 <td>{{ user.role }}</td>
                 <td>{{ user.regiao }}</td>
                 <td>{{ user.user_type }}</td>
+                <td>{{ user.empreendimento }}</td>
                 <td>
                     <div class="d-flex justify-content-start">
                         <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="me-2">
