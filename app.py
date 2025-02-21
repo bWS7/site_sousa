@@ -324,13 +324,20 @@ def coordenador_dashboard():
         print("Usuário não é coordenador")
         return redirect(url_for('dashboard'))
 
-    # ... (resto do código)
-
     # Busca os arquivos PDF com base no empreendimento do coordenador
-    pdf_files = PDFFile.query.filter_by(empreendimento=user.empreendimento).all()
+    pdf_files = []
+    if user.empreendimento:  # Verifica se user.empreendimento não é None
+        empreendimentos_coordenador = [emp.strip().lower() for emp in user.empreendimento.split(',')]
+
+        for pdf in PDFFile.query.all():
+            if pdf.empreendimento: # Verifica se pdf.empreendimento não é None
+                empreendimento_pdf = pdf.empreendimento.strip().lower()
+                if empreendimento_pdf in empreendimentos_coordenador:
+                    pdf_files.append(pdf)
+    else:
+         print("Nenhum empreendimento associado a esse coordenador")
 
     return render_template('coordenador_dashboard.html', pdf_files=pdf_files, user=user)
-
 
 
 @app.route('/dashboard')
@@ -500,6 +507,9 @@ def cadastrar_usuario():
         user_type = request.form['user_type']
         regiao = request.form['regiao']  # Use getlist() para receber a lista de regiões
         empreendimento = request.form.getlist('empreendimento')  # Use getlist() para receber a lista de empreendimentos
+        
+        empreendimento = ','.join(empreendimento)
+
 
 
         # Adiciona o novo usuário no banco de dados
