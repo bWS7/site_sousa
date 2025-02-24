@@ -166,9 +166,12 @@ def send_pdf_to_user():
 @app.route('/perfil', methods=['GET', 'POST'])
 def perfil():
     if 'user_id' not in session:
-        return redirect(url_for('login'))  # Se não estiver logado, redireciona para o login
-    
-    user = User.query.get(session['user_id'])  # Obtém o usuário da sessão
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+
+    if user is None:
+        return redirect(url_for('login'))
     
     if request.method == 'POST':  # Se o método for POST, significa que o usuário está tentando salvar as alterações
         # Obtém os novos valores do formulário
@@ -179,19 +182,28 @@ def perfil():
         
         # Verifica se a senha atual está correta antes de atualizar
         current_password = request.form['confirm_password']
-        if user.password != current_password:  # Comparação direta com a senha em texto simples
-            return "A senha atual está incorreta", 400  # Retorna um erro se a senha atual for inválida
-        
-        # Apenas atualiza a senha se o campo da nova senha não estiver vazio
+        if user.password.lower().strip() != current_password.lower().strip():
+            return render_template('perfil.html', user=user)
+
         new_password = request.form['password']
         if new_password:
-            user.password = new_password  # Atualiza a senha com a nova, se fornecida
-        
-        db.session.commit()  # Salva as alterações no banco de dados
-        
-        return redirect(url_for('perfil'))  # Redireciona de volta para o perfil
-    
-    return render_template('perfil.html', user=user)  # Exibe a página de perfil com as informações do usuário
+            user.password = new_password
+
+        db.session.commit()
+
+        user = User.query.get(session['user_id'])  # Recarrega o usuário
+
+        session['user'] = {  # Atualiza a sessão *sem a senha*
+            'id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'role': user.role,
+            # ... outros dados *necessários*
+        }
+
+        return redirect(url_for('perfil') + '?t=' + str(datetime.now().timestamp()))
+
+    return render_template('perfil.html', user=user)
 
 # Rota para exibir o formulário
 @app.route('/forms', methods=['GET'])
@@ -251,6 +263,13 @@ def login():
         if user and user.check_password(password):
             session['user_id'] = user.id
             session['role'] = user.role
+            
+            session['user'] = {  # Inicializa a sessão *após* a autenticação
+            'id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'role': user.role,
+        }
 
             # Redireciona para o dashboard
             if user.role == 'master':
