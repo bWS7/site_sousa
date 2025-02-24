@@ -136,12 +136,12 @@
     </div>
     <div class="offcanvas-body">
         <ul class="list-unstyled">
-            <li><a href="https://site-sousa.onrender.com/master_dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
             <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
-            <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
-            <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100">Dashboard</a></li>
-            <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
-            <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
+                <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
+                <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100">Dashboard</a></li>
+                <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
+                <li><a href="https://wa.link/cixb2g" class="btn btn-light w-100">Ajuda</a></li>
+                <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
         </ul>
     </div>
 </div>
@@ -158,11 +158,14 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" class="form-control">
+                    <input type="text" id="email" name="email" value="{{ user.email }}" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="cnpj">CNPJ:</label>
                     <input type="text" id="cnpj" name="cnpj" value="{{ user.cnpj }}" class="form-control">
+                </div>
+                <label for="telefone">Telefone:</label>
+                    <input type="text" id="telefone" name="telefone" value="{{ user.telefone }}" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label for="role">Tipo de usuário:</label>

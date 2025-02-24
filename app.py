@@ -104,6 +104,7 @@ class User(db.Model):
     user_type = db.Column(db.String(20))  # Adiciona a coluna 'user_type'
     regiao = db.Column(db.String(100))  # Novo campo
     empreendimento = db.Column(db.String(255))
+    telefone = db.Column(db.String(15))
     
 
     # Relacionamento com os arquivos PDF
@@ -173,6 +174,7 @@ def perfil():
         # Obtém os novos valores do formulário
         user.name = request.form['name']
         user.email = request.form['email']
+        user.telefone = request.form['telefone']
         user.cnpj = request.form['cnpj']
         
         # Verifica se a senha atual está correta antes de atualizar
@@ -502,6 +504,7 @@ def cadastrar_usuario():
         cnpj = request.form['cnpj']
         name = request.form['name']
         email = request.form['email']
+        telefone = request.form['telefone']
         password = request.form['password']
         role = request.form['role']
         user_type = request.form['user_type']
@@ -513,7 +516,7 @@ def cadastrar_usuario():
 
 
         # Adiciona o novo usuário no banco de dados
-        new_user = User(cnpj=cnpj, name=name, email=email, password=(password), role=role, user_type=user_type,regiao=regiao, empreendimento=empreendimento)
+        new_user = User(cnpj=cnpj, name=name, email=email, password=(password), role=role, user_type=user_type,regiao=regiao, empreendimento=empreendimento, telefone=telefone)
         db.session.add(new_user)
         db.session.commit()
 
@@ -615,6 +618,7 @@ def edit_user(user_id):
         # Atualizar os dados do usuário no banco de dados
         user.name = request.form['name']
         user.email = request.form['email']
+        user.telefone = request.form['telefone']
         user.cnpj = request.form['cnpj']
         user.password = request.form['password']
         user.role = request.form['role']
