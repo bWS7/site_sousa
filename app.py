@@ -179,9 +179,8 @@ def perfil():
         
         # Verifica se a senha atual está correta antes de atualizar
         current_password = request.form['confirm_password']
-        
         if user.password != current_password:  # Comparação direta com a senha em texto simples
-            return render_template('perfil.html', user=user)
+            return "A senha atual está incorreta", 400  # Retorna um erro se a senha atual for inválida
         
         # Apenas atualiza a senha se o campo da nova senha não estiver vazio
         new_password = request.form['password']
