@@ -189,11 +189,8 @@ def perfil():
         
         db.session.commit()  # Salva as alterações no banco de dados
         
-        session['user']['password'] = new_password  # Ou user.password, se new_password for None
-        
-        return redirect(url_for('dashboard') + '?t=' + str(datetime.now().timestamp()))
-        
-        
+        return redirect(url_for('perfil'))  # Redireciona de volta para o perfil
+    
     return render_template('perfil.html', user=user)  # Exibe a página de perfil com as informações do usuário
 
 # Rota para exibir o formulário
