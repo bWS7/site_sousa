@@ -50,6 +50,15 @@
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Barra de rolagem horizontal */
+            max-height: 400px; /* Altura máxima da tabela */
+            overflow-y: auto; /* Barra de rolagem vertical */
+        }
+
+        thead {
+            position: sticky; /* Fixa o cabeçalho */
+            top: 0;
+            z-index: 10; /* Garante que o cabeçalho fique acima de outros elementos */
         }
 
         table, th, td {
@@ -194,58 +203,58 @@ html, body {
     </div>
     
 
-    <!-- Barra de Pesquisa -->
     <div class="search-bar">
         <input type="text" id="searchInput" class="search-input" placeholder="Pesquise por nome, e-mail ou tipo de usuário" onkeyup="filterTable()">
     </div>
 
-    <!-- Tabela -->
-    <table id="usuariosTable">
-        <thead>
+    <div style="max-height: 620px; overflow-y: auto;">
+        <table id="usuariosTable">
+          <thead>
             <tr>
-                <th>ID</th>
-                <th>CNPJ</th>
-                <th>Telefone</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Tipo de Usuário</th>
-                <th>Regional</th>
-                <th>Colaborador</th>
-                <th>Empreendimento</th>
-                <th>Ações</th> <!-- Nova coluna para os botões -->
+              <th>ID</th>
+              <th>CNPJ</th>
+              <th>Telefone</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Tipo de Usuário</th>
+              <th>Regional</th>
+              <th>Colaborador</th>
+              <th>Empreendimento</th>
+              <th>Ações</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% if usuarios %}
             {% for user in usuarios %}
             <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.cnpj }}</td>
-                <td>{{ user.telefone }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
-                <td>{{ user.regiao }}</td>
-                <td>{{ user.user_type }}</td>
-                <td>{{ user.empreendimento }}</td>
-                <td>
-                    <div class="d-flex justify-content-start">
-                        <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="me-2">
-                            <button type="submit" class="btn btn-danger">Excluir</button>
-                        </form>
-                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-primary">Editar</a>
-                    </div>
-                </td>                
+              <td>{{ user.id }}</td>
+              <td>{{ user.cnpj }}</td>
+              <td>{{ user.telefone }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.role }}</td>
+              <td>{{ user.regiao }}</td>
+              <td>{{ user.user_type }}</td>
+              <td>{{ user.empreendimento }}</td>
+              <td>
+                <div class="d-flex justify-content-start">
+                  <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="me-2">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                  </form>
+                  <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-primary">Editar</a>
+                </div>
+              </td>
             </tr>
-        {% endfor %}
-        
+            {% endfor %}
+      
             {% else %}
-                <tr>
-                    <td colspan="6" style="text-align: center;">Nenhum usuário encontrado.</td>
-                </tr>
+            <tr>
+              <td colspan="6" style="text-align: center;">Nenhum usuário encontrado.</td>
+            </tr>
             {% endif %}
-        </tbody>          
-    </table>    
+          </tbody>
+        </table>
+      </div>
     <script>
         // Função para filtrar a tabela com base na pesquisa
         function filterTable() {
@@ -273,27 +282,27 @@ html, body {
 
     <script>
         function deleteUser(userId) {
-    userId = JSON.parse(userId);  // Para garantir que o valor seja tratado corretamente
-    console.log(userId);  // Verifique se o id está sendo interpretado corretamente
-    fetch(`/delete_user/${userId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: userId })
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('Usuário excluído com sucesso!');
-            window.location.reload(); // Recarregar a página para refletir a exclusão
-        } else {
-            alert('Erro ao excluir o usuário!');
-        }
-    })
-    .catch(error => {
-        alert('Erro na requisição: ' + error.message);
-    });
-}
+        userId = JSON.parse(userId);  // Para garantir que o valor seja tratado corretamente
+        console.log(userId);  // Verifique se o id está sendo interpretado corretamente
+        fetch(`/delete_user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: userId })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Usuário excluído com sucesso!');
+                window.location.reload(); // Recarregar a página para refletir a exclusão
+            } else {
+                alert('Erro ao excluir o usuário!');
+            }
+        })
+        .catch(error => {
+            alert('Erro na requisição: ' + error.message);
+        });
+    }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
