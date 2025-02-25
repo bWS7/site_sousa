@@ -274,6 +274,8 @@ def login():
             # Redireciona para o dashboard
             if user.role == 'master':
                 return redirect(url_for('master_dashboard'))
+            if user.role == 'supervisor':
+                return redirect(url_for('supervisor_dashboard'))
             elif user.role == 'admin':
                 return redirect(url_for('admin_dashboard'))
             elif user.role == 'coord':
@@ -344,7 +346,7 @@ def coordenador_dashboard():
     if user.role != 'coord':
         print("Usuário não é coordenador")
         return redirect(url_for('dashboard'))
-
+    
     # Busca os arquivos PDF com base no empreendimento do coordenador
     pdf_files = []
     if user.empreendimento:  # Verifica se user.empreendimento não é None
@@ -359,6 +361,40 @@ def coordenador_dashboard():
          print("Nenhum empreendimento associado a esse coordenador")
 
     return render_template('coordenador_dashboard.html', pdf_files=pdf_files, user=user)
+
+@app.route('/supervisor_dashboard')
+def supervisor_dashboard():
+    print("Entrou na função supervisor_dashboard()")
+    if 'user_id' not in session:
+        print("user_id não está na sessão")
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    if user is None:
+        print("Usuário não encontrado")
+        return redirect(url_for('login'))
+
+    print(f"User role: {user.role}")
+    print(f"Conteúdo da sessão: {session}")
+
+    if user.role != 'supervisor':
+        print("Usuário não é supervisor")
+        return redirect(url_for('dashboard'))
+    
+    # Busca os arquivos PDF com base no empreendimento do coordenador
+    pdf_files = []
+    if user.empreendimento:  # Verifica se user.empreendimento não é None
+        empreendimentos_supervisor = [emp.strip().lower() for emp in user.empreendimento.split(',')]
+
+        for pdf in PDFFile.query.all():
+            if pdf.empreendimento: # Verifica se pdf.empreendimento não é None
+                empreendimento_pdf = pdf.empreendimento.strip().lower()
+                if empreendimento_pdf in empreendimentos_supervisor:
+                    pdf_files.append(pdf)
+    else:
+         print("Nenhum empreendimento associado a esse coordenador")
+
+    return render_template('supervisor_dashboard.html', pdf_files=pdf_files, user=user)
 
 
 @app.route('/dashboard')
