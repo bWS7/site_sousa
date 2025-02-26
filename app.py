@@ -418,13 +418,13 @@ def dashboard():
         return redirect(url_for('master_dashboard'))
     
     if user.role == 'coord':
-        return redirect(url_for('dash'))
+        return redirect(url_for('coord_dashboard'))
     
     if user.role == 'supervisor':
-        return redirect(url_for('dash'))
+        return redirect(url_for('supervisor_dashboard'))
     
     if user.role == 'admin':
-        return redirect(url_for('dash'))
+        return redirect(url_for('admin_dashboard'))
 
 
     # Filtra os arquivos do usuário comum
