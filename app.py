@@ -418,7 +418,7 @@ def dashboard():
         return redirect(url_for('master_dashboard'))
     
     if user.role == 'coord':
-        return redirect(url_for('coord_dashboard'))
+        return redirect(url_for('coordenador_dashboard'))
     
     if user.role == 'supervisor':
         return redirect(url_for('supervisor_dashboard'))
