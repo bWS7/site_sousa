@@ -345,7 +345,14 @@ def coordenador_dashboard():
 
     if user.role != 'coord':
         print("Usuário não é coordenador")
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('admin_dashboard'))
+    
+
+    if user.role == 'supervisor':
+        return redirect(url_for('supervisor_dashboard'))
+    
+    if user.role == 'admin':
+        return redirect(url_for('admin_dashboard'))
     
     # Busca os arquivos PDF com base no empreendimento do coordenador
     pdf_files = []
@@ -407,6 +414,16 @@ def dashboard():
     # Se o usuário for master, redireciona para a master_dashboard
     if user.role == 'master':
         return redirect(url_for('master_dashboard'))
+    
+    if user.role == 'coord':
+        return redirect(url_for('dash'))
+    
+    if user.role == 'supervisor':
+        return redirect(url_for('dash'))
+    
+    if user.role == 'admin':
+        return redirect(url_for('dash'))
+
 
     # Filtra os arquivos do usuário comum
     pdf_files = PDFFile.query.filter_by(user_id=user.id).all()
@@ -420,6 +437,33 @@ def dashboard():
 
     # Passa os dados para o template
     return render_template('dashboard.html', user=user, pdf_files=pdf_files, master_files=master_files)
+
+@app.route('/dash')
+def dash():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+
+    # Se o usuário for master, redireciona para a master_dashboard
+    if user.role == 'master':
+        return redirect(url_for('master_dashboard'))
+    
+    if user.role == 'user':
+        return redirect(url_for('dashboard'))
+
+    # Filtra os arquivos do usuário comum
+    pdf_files = PDFFile.query.filter_by(user_id=user.id).all()
+
+    # Busca os arquivos enviados pelo master (agora de forma dinâmica)
+    master_user = User.query.filter_by(role='master').first()
+    if master_user:
+        master_files = PDFFile.query.filter_by(user_id=master_user.id, sent_to_user_id=user.id).all()
+    else:
+        master_files = []
+
+    # Passa os dados para o template
+    return render_template('dash.html', user=user, pdf_files=pdf_files, master_files=master_files)
 
 
 @app.route('/master_dashboard', methods=['GET', 'POST'])

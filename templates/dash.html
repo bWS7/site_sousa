@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .form-label h4 {
+            color: white;
+        }
+
+        .form-label {
+            color: white;
+        }
+
+        body {
+            background: linear-gradient(45deg, #8b1d24, #333);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            margin: 0;
+        }
+
+        header {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        /* Botão do menu */
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+        }
+
+        .menu-toggle:hover {
+            background: none;
+            transform: none;
+        }
+
+        /* Estilização do menu lateral */
+        .offcanvas {
+            width: 250px;
+            background-color: #8b1d24;
+            color: white;
+        }
+
+        .offcanvas.show {
+            background-color: #8b1d24;
+        }
+
+        .offcanvas-header .btn-close {
+            filter: invert(1);
+        }
+
+        .offcanvas-body a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            color: #8b1d24;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            margin-bottom: 20px !important;
+        }
+
+        .offcanvas-body a:hover {
+            background: #b71c1c;
+            color: white;
+        }
+
+        .logo {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    height: 150px;
+}
+
+        .container {
+            padding: 20px;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .table td p {
+            margin: 0;
+        }
+
+        .table th, .table td {
+            border-radius: 8px;
+        }
+
+        /* Estilização da tabela */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: separate;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #444;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #8b1d24 !important;
+            color: #fff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        td {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        tr:hover th {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            display: block;
+            margin: 20px auto;
+            background-color: #28a745;
+            border: none;
+            padding: 12px 24px;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-primary1 {
+            display: block;
+            margin:5px auto;
+            background-color: #28a745;
+            border: none;
+            padding: 6px 12px;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 10px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        .btn-primary:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .card {
+            background: linear-gradient(45deg, #8b1d24, #333);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #8b1d24;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+
+        .btn-custom {
+            background-color: #8b1d24;
+            color: white;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: bold;
+            border: none;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #b71c1c;
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            border-radius: 10px;
+            color: white;
+            padding: 12px 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .link-youtube {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* Garante que o texto fique acima de outros elementos */
+  }
+
+  .link-youtube a {
+    color: #FF0000;
+    text-decoration: none;
+    font-family: sans-serif;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+
+  .link-youtube a:hover {
+    color: #CC0000;
+  }
+
+        /* Media Queries para Responsividade */
+
+        @media (max-width: 768px) {
+            .logo {
+                height: 120px;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .table {
+                width: 100%;
+                font-size: 0.9rem;
+            }
+
+            .card {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .menu-toggle {
+                font-size: 28px;
+                top: 10px;
+                left: 10px;
+            }
+
+            .offcanvas {
+                width: 100%;
+            }
+
+            .btn-primary {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .btn-custom, .btn-danger {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            
+            .btn-primary {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            .btn-custom, .btn-danger {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            .logo {
+        height: 100px; /* Reduz o tamanho da logo */
+        top: -15px; /* Ajusta a posição para cima */
+        right: 10px; /* Mantém no canto superior direito */
+            }
+
+    header h1 {
+        text-align: center; /* Garante que o título fique centralizado */
+        margin-top: 55px;
+    }
+
+    @media (max-width: 768px) {
+    .table td:nth-child(1), /* Se a coluna "Arquivo" for a terceira */
+    .table th:nth-child(1) {
+        max-width: 100px; /* Ajuste conforme necessário */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+}
+    </style>
+</head>
+<body>
+    <div class="menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">☰ Menu</div>
+
+    <img src="https://sousaaraujo.vagas.solides.com.br/_next/image?url=https%3A%2F%2Fc5gwmsmjx1.execute-api.us-east-1.amazonaws.com%2Fprod%2Fdados_processo_seletivo%2Flogo_empresa%2F134433%2FSOLIDES-PERFIL.png&w=3840&q=75" class="logo" alt="Logo">
+
+    <!-- Menu lateral -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-unstyled">
+                <li><a href="https://site-sousa.onrender.com/dashboard" class="btn btn-light w-100 mb-2">Inicio</a></li>
+                <li><a href="https://site-sousa.onrender.com/perfil" class="btn btn-light w-100 mb-2">Meu Perfil</a></li>
+                <li><a href="https://site-sousa.onrender.com/dash" class="btn btn-light w-100">Dashboard</a></li>
+                <li><a href="https://site-sousa.onrender.com/coordenador_dashboard" class="btn btn-light w-100">Arquivos enviados pelos colaboradores</a></li>
+                <li><a href="https://site-sousa.onrender.com/info" class="btn btn-light w-100">Informações</a></li>
+                <li><a href="https://wa.link/cixb2g" class="btn btn-light w-100">Ajuda</a></li>
+                <li><a href="https://site-sousa.onrender.com/" class="btn btn-light w-100">Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <header>
+        <h1>Dashboard {{ user.name }} </h1>
+    </header>
+
+    <div class="container">
+        <!-- Arquivos Enviados Pelo Administrador -->
+        <div class="card">
+            <div class="card-header">
+                Arquivos Enviados Pelo Administrador
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Arquivo</th>
+                        <th>Tipo</th>
+                        <th>Visto</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pdf in master_files %}
+                    <tr>
+                        <td>{{ pdf.filename }}</td>
+                        <td>{{ pdf.file_type|capitalize }}</td>
+                        <td>
+                            {% if pdf.first_viewed_at %}
+                            {{ pdf.first_viewed_at.strftime('%d/%m %H:%M') }}
+                            {% else %}
+                            Não disponível
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary1" target="_blank">Visualizar</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Nenhum arquivo disponível.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Arquivos Enviados Por Você -->
+        <div class="card">
+            <div class="card-header">
+                Arquivos Enviados Por Você
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Empreendimento</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Envio</th>
+                        <th scope="col">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pdf in pdf_files %}
+                    <tr>
+                        <td>{{ pdf.empreendimento }}</td>
+                        <td>{{ pdf.file_type|capitalize }}</td>
+                        <td>
+                            {% if pdf.uploaded_at %}
+                                {{ pdf.uploaded_at.strftime('%d/%m %H:%M') }}
+                            {% else %}
+                                Não disponível
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('view_pdf', pdf_id=pdf.id) }}" class="btn btn-primary1" target="_blank">Visualizar</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhum arquivo disponível.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="https://site-sousa.onrender.com/forms" class="btn btn-primary">Enviar Nota Fiscal</a>
+
+         <a href="https://youtu.be/Sr2H63xsTY8" target="_blank" class="link-youtube">
+        Como envio minha nota?
+    </a>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('side-menu').classList.toggle('open');
+        }
+    </script>
+    
+</body>
+</html>
