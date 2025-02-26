@@ -345,9 +345,11 @@ def coordenador_dashboard():
 
     if user.role != 'coord':
         print("Usuário não é coordenador")
-        return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('dashboard'))
     
-
+    if user.role == 'master':
+        return redirect(url_for('master_dashboard'))
+    
     if user.role == 'supervisor':
         return redirect(url_for('supervisor_dashboard'))
     
